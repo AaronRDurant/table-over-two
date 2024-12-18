@@ -9,10 +9,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "var(--background)", // Global CSS variable for background
+        foreground: "var(--foreground)", // Global CSS variable for text
       },
+      fontFamily: {
+        // Custom font stack
+        sans: [
+          "Inter",
+          "system-ui",
+          "-apple-system",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
+      },
+      typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            color: theme("colors.foreground"),
+            a: {
+              color: theme("colors.blue.500"),
+              "&:hover": {
+                color: theme("colors.blue.700"),
+              },
+            },
+          },
+        },
+        dark: {
+          css: {
+            color: theme("colors.foreground"),
+            a: {
+              color: theme("colors.blue.400"),
+              "&:hover": {
+                color: theme("colors.blue.600"),
+              },
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 } satisfies Config;
