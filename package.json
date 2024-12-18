@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.15",
+    "@tryghost/content-api": "^1.11.21",
     "next": "15.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
