@@ -6,6 +6,17 @@ import Sidebar from "./sidebar";
 export const metadata: Metadata = {
   title: "Table Over Two",
   description: "Breaking down motocross success.",
+  openGraph: {
+    url: "https://www.tableovertwo.com",
+    images: [
+      {
+        url: "/Jett-Lawrence-2024-Supercross-Honda-CRF450R-race-bike.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Jett Lawrence's 2024 Supercross race bike in the Team Honda HRC hauler",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -43,8 +54,10 @@ export default function RootLayout({
       <body className="bg-background text-foreground antialiased font-sans">
         <ThemeProvider>
           <div className="flex justify-center">
-            <main className="max-w-3xl p-6">{children}</main>
-            <Sidebar />
+            <main className="max-w-3xl py-6 flex-grow">{children}</main>
+            <aside className="w-[260px]">
+              <Sidebar />
+            </aside>
           </div>
         </ThemeProvider>
       </body>

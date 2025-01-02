@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useTheme } from "@/providers/theme";
+import { useTheme, teamThemes } from "@/providers/theme";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -13,7 +13,6 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faRss, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
-// Navigation Links
 const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/archive", label: "Archive" },
@@ -21,7 +20,6 @@ const navigationLinks = [
   { href: "/about", label: "About" },
 ];
 
-// Connect Links
 const connectLinks = [
   {
     href: "https://x.com/aarondurant80",
@@ -57,9 +55,8 @@ const connectLinks = [
 ];
 
 export default function Sidebar() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, setTeam, team } = useTheme();
 
-  // Memoize Connect Links for Optimization
   const memoizedConnectLinks = useMemo(
     () =>
       connectLinks.map(
@@ -73,9 +70,10 @@ export default function Sidebar() {
     [theme]
   );
 
+  const themeKeys = Object.keys(teamThemes) as Array<keyof typeof teamThemes>;
+
   return (
-    <aside className="flex-shrink-0 basis-[270px] p-6 border-l border-gray-500">
-      {/* Logo and Site Title */}
+    <aside className="flex-shrink-0 basis-[270px] p-6 border-l border-[var(--accent)]">
       <div className="flex items-center mb-6">
         <Image
           src="/Table-Over-Two-logo.png"
@@ -87,71 +85,81 @@ export default function Sidebar() {
         <h1 className="text-xl font-bold text-foreground">Table Over Two</h1>
       </div>
 
-      {/* Navigation Menu */}
       <nav className="flex flex-col space-y-2">
         {navigationLinks.map(({ href, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className="text-[22px] font-bold hover:underline"
-          >
+          <Link key={href} href={href} className="text-[22px] font-bold">
             {label}
           </Link>
         ))}
       </nav>
 
-      {/* Theme Toggle */}
-      <div className="mt-8 flex items-center space-x-2 cursor-pointer">
-        {theme === "light" ? (
-          <>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6 text-blue-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-              />
-            </svg>
+      <div className="mt-8">
+        <div className="grid grid-cols-4 gap-4">
+          {themeKeys.map((teamKey) => (
             <button
-              onClick={toggleTheme}
-              className="text-md font-bold hover:underline"
-            >
-              Dark mode
-            </button>
-          </>
-        ) : (
-          <>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6 text-yellow-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-              />
-            </svg>
-            <button
-              onClick={toggleTheme}
-              className="text-md font-bold hover:underline"
-            >
-              Light mode
-            </button>
-          </>
-        )}
+              key={teamKey}
+              onClick={() => setTeam(teamKey)}
+              className={`w-7 h-7 rounded-full ${
+                team === teamKey
+                  ? "ring-2 ring-offset-1 ring-offset-background ring-link"
+                  : ""
+              }`}
+              style={{
+                backgroundColor: teamThemes[teamKey].bubble,
+              }}
+              aria-label={teamKey}
+            />
+          ))}
+        </div>
+        <div className="mt-4 text-gray-500">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center space-x-1 hover:underline"
+          >
+            {theme === "light" ? (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5 text-blue-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+                  />
+                </svg>
+                <span>Dark</span>
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5 text-yellow-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                  />
+                </svg>
+                <span>Light</span>
+              </>
+            )}
+          </button>
+          {team !== "default" && teamThemes[team].teamName && (
+            <div className="mt-1">{teamThemes[team].teamName}</div>
+          )}
+        </div>
       </div>
 
-      {/* Connect Section */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Connect</h2>
         <ul className="space-y-2">
@@ -174,7 +182,6 @@ export default function Sidebar() {
         </ul>
       </div>
 
-      {/* Footer Text */}
       <div className="mt-8 space-y-4 text-sm">
         <p>
           <strong>Table Over Two</strong>: Breaking down motocross success since

@@ -20,7 +20,7 @@ export default async function Home() {
     });
 
   const styles = {
-    article: "border-b border-gray-500 py-8",
+    article: "border-b border-accent py-8", // Switch `border-b-2` to `border-b`
     heading: "text-2xl font-semibold mt-2 text-foreground",
     link: "text-link hover:underline mt-2 inline-block",
     empty: "text-gray-500 text-center mt-8",
@@ -28,7 +28,7 @@ export default async function Home() {
 
   return (
     <div className="flex justify-center min-h-screen bg-background text-foreground">
-      <main className="max-w-3xl w-full px-4 pb-6">
+      <main className="max-w-3xl w-full px-8 pb-6">
         <section>
           {posts.length > 0 ? (
             posts.map((post) => (
