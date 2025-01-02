@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: [new URL(process.env.GHOST_API_URL!).hostname], // Dynamically allow Ghost domain
+  },
 };
 
 export default nextConfig;

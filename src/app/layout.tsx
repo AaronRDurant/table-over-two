@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme";
+import Sidebar from "./sidebar";
 
 export const metadata: Metadata = {
   title: "Table Over Two",
@@ -8,35 +10,43 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicon and App Icons */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
+        <link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
+      </head>
       <body className="bg-background text-foreground antialiased font-sans">
-        <header className="bg-blue-500 text-white p-4">
-          <div className="container mx-auto flex justify-between items-center">
-            <h1 className="text-lg font-bold">Table Over Two</h1>
-            <nav>
-              <ul className="flex space-x-4">
-                <li>
-                  <a href="/" className="hover:underline">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="/about" className="hover:underline">
-                    About
-                  </a>
-                </li>
-              </ul>
-            </nav>
+        <ThemeProvider>
+          <div className="flex justify-center">
+            <main className="max-w-3xl p-6">{children}</main>
+            <Sidebar />
           </div>
-        </header>
-        <main className="p-4">{children}</main>
-        <footer className="bg-gray-800 text-white p-4 mt-4 text-center">
-          <p>&copy; 2024 Table Over Two. All rights reserved.</p>
-        </footer>
+        </ThemeProvider>
       </body>
     </html>
   );
