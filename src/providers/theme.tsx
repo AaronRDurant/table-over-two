@@ -2,27 +2,31 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
+// Define the shape of the ThemeContext
 type ThemeContextType = {
-  theme: "light" | "dark";
-  toggleTheme: () => void;
-  team: keyof typeof teamThemes;
-  setTeam: (team: keyof typeof teamThemes) => void;
+  theme: "light" | "dark"; // Current theme (light or dark)
+  toggleTheme: () => void; // Function to toggle theme
+  team: keyof typeof teamThemes; // Current team theme
+  setTeam: (team: keyof typeof teamThemes) => void; // Function to update team theme
 };
 
+// Define the structure of a team theme
 type TeamTheme = {
-  accent: string;
-  link: string;
-  bubble: string;
-  teamName: string;
+  accent: string; // Accent color
+  link: string; // Link color
+  bubble: string; // Color for bubble elements
+  teamName: string; // Display name of the team
   dark?: {
-    background?: string;
-    link?: string;
-    accent?: string;
+    background?: string; // Background color for dark mode
+    link?: string; // Link color for dark mode
+    accent?: string; // Accent color for dark mode
   };
 };
 
+// Create a context for theme management
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Define themes for each team
 export const teamThemes: Record<string, TeamTheme> = {
   default: {
     accent: "#cccccc",
@@ -34,7 +38,7 @@ export const teamThemes: Record<string, TeamTheme> = {
     accent: "#024DCA",
     link: "#000000",
     bubble: "#024DCA",
-    teamName: "Monster Energy Yamaha Star Racing",
+    teamName: "Star Racing Yamaha",
     dark: {
       link: "#024DCA",
       accent: "#95D600",
@@ -100,11 +104,17 @@ export const teamThemes: Record<string, TeamTheme> = {
   },
 };
 
+// ThemeProvider Component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
-  const [team, setTeam] = useState<keyof typeof teamThemes>("default");
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null); // Theme state
+  const [team, setTeam] = useState<keyof typeof teamThemes>("default"); // Team state
 
-  // Apply theme styles
+  /**
+   * Applies CSS variables based on the current theme and team.
+   *
+   * @param theme - Current theme (light or dark).
+   * @param team - Current team name.
+   */
   const applyThemeVariables = (theme: "light" | "dark", team: string) => {
     const teamColors = teamThemes[team] || teamThemes.default;
     const isDarkMode = theme === "dark";
@@ -139,7 +149,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  // Load theme and team from localStorage on mount
+  // Load saved preferences from localStorage on mount
   useEffect(() => {
     const savedTheme =
       (localStorage.getItem("theme") as "light" | "dark") || "light";
@@ -149,29 +159,38 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     setTheme(savedTheme);
     setTeam(savedTeam);
 
-    // Apply immediately to avoid flash
+    // Apply initial theme variables
     applyThemeVariables(savedTheme, savedTeam);
   }, []);
 
-  // Update CSS variables whenever theme or team changes
+  // Update CSS variables when theme or team changes
   useEffect(() => {
     if (theme && team) {
       applyThemeVariables(theme, team);
     }
   }, [theme, team]);
 
+  /**
+   * Toggles between light and dark themes.
+   */
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
   };
 
-  const handleSetTeam = (newTeam: keyof typeof teamThemes) => {
+  /**
+   * Updates the active team theme.
+   *
+   * @param newTeam - The new team to apply.
+   */
+  const updateTeam = (newTeam: keyof typeof teamThemes) => {
     setTeam(newTeam);
     localStorage.setItem("team", newTeam);
   };
 
-  if (theme === null) return null; // Wait until hydrated
+  // Ensure the component doesn't render until hydration
+  if (theme === null) return null;
 
   return (
     <ThemeContext.Provider
@@ -179,7 +198,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         theme,
         toggleTheme,
         team,
-        setTeam: handleSetTeam,
+        setTeam: updateTeam,
       }}
     >
       {children}
@@ -187,8 +206,15 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+/**
+ * Custom hook to use the ThemeContext.
+ *
+ * @returns The current theme context values.
+ */
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
   return context;
 };
