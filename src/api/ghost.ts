@@ -118,3 +118,42 @@ export async function getGhostPostBySlug(slug: string): Promise<Post | null> {
     return null;
   }
 }
+
+/**
+ * Fetches all tags from the Ghost API.
+ *
+ * @returns A list of tags, or an empty array if the fetch fails.
+ */
+export async function getGhostTags(): Promise<
+  Array<{
+    id: string;
+    name: string;
+    slug: string;
+    description?: string;
+    feature_image?: string;
+  }>
+> {
+  const url = buildUrl("tags", {
+    include: "count.posts",
+    limit: "all", // Fetch all available tags
+  });
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch tags: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Validate the structure of the response
+    return Array.isArray(data.tags) ? data.tags : [];
+  } catch (error: unknown) {
+    console.error(
+      "Error fetching tags:",
+      error instanceof Error ? error.message : error
+    );
+    return [];
+  }
+}
