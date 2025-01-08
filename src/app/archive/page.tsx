@@ -38,28 +38,40 @@ export default async function ArchivePage() {
   const groupedPosts = groupPostsByYear(posts);
 
   return (
-    <div className="flex justify-center min-h-screen bg-background text-foreground">
-      <main className="max-w-3xl w-full px-8 pb-6">
-        <h1 className="text-2xl font-bold mb-6">Archive</h1>
+    <div className="flex justify-center bg-background text-foreground min-h-screen">
+      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12">
+        {/* Page Title */}
+        <header className="mb-6 sm:mb-8 md:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
+            Archive
+          </h1>
+        </header>
+
+        {/* Grouped Posts by Year */}
         {Object.keys(groupedPosts)
           .sort((a, b) => Number(b) - Number(a)) // Sort years descending
           .map((year) => (
-            <section key={year} className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">{year}</h2>
-              <ul className="space-y-4">
+            <section key={year} className="mb-8 sm:mb-10">
+              <h2 className="text-xl sm:text-2xl font-semibold mb-4">{year}</h2>
+              <ul className="space-y-6">
                 {groupedPosts[year].map((post: Post) => (
-                  <li key={post.id} className="flex items-start gap-4">
+                  <li
+                    key={post.id}
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                  >
                     {post.feature_image && (
-                      <Image
-                        src={post.feature_image}
-                        alt={
-                          post.feature_image_alt ||
-                          `Thumbnail for ${post.title}`
-                        }
-                        width={100}
-                        height={60}
-                        className="rounded object-cover"
-                      />
+                      <div className="hidden sm:block">
+                        <Image
+                          src={post.feature_image}
+                          alt={
+                            post.feature_image_alt ||
+                            `Thumbnail for ${post.title}`
+                          }
+                          width={120}
+                          height={72}
+                          className="rounded object-cover"
+                        />
+                      </div>
                     )}
                     <div>
                       <p className="text-sm text-gray-500">
@@ -72,10 +84,10 @@ export default async function ArchivePage() {
                           }
                         )}
                       </p>
-                      <h3 className="text-lg font-semibold">
+                      <h3 className="text-lg sm:text-xl font-semibold">
                         <Link
                           href={`/${post.slug}`}
-                          className="hover:underline"
+                          className="hover:underline block break-words"
                         >
                           {post.title}
                         </Link>

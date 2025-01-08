@@ -4,9 +4,8 @@ import Image from "next/image";
 import { Post } from "@/types/post";
 
 /**
- * The homepage of the website, displaying the latest articles fetched from the Ghost API.
- *
- * @returns The JSX markup for the homepage, including a list of articles or a fallback message if no articles are found.
+ * Homepage
+ * Displays the latest articles fetched from the Ghost API.
  */
 export default async function Home() {
   let posts: Post[] = [];
@@ -33,37 +32,49 @@ export default async function Home() {
     });
 
   return (
-    <div className="flex justify-center min-h-screen bg-background text-foreground">
-      <main className="max-w-3xl w-full px-8 pb-6">
+    <div className="flex justify-center bg-background text-foreground min-h-screen">
+      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 pb-6">
+        {/* Article Section */}
         <section>
           {posts.length > 0 ? (
             posts.map((post) => (
-              <article key={post.id} className="border-b border-accent py-8">
+              <article
+                key={post.id}
+                className="border-b border-accent py-6 sm:py-8"
+              >
                 {/* Article Publication Date */}
-                <p className="text-sm text-gray-500 mb-2">
+                <p className="text-sm sm:text-base text-gray-500 mb-2">
                   {formatDate(post.published_at)}
                 </p>
 
                 {/* Article Title */}
-                <h2 className="text-2xl font-semibold mb-4">
-                  <Link href={`/${post.slug}`} className="hover:underline">
+                <h2 className="text-xl sm:text-2xl font-semibold leading-snug">
+                  <Link
+                    href={`/${post.slug}`}
+                    className="hover:underline block break-words"
+                  >
                     {post.title}
                   </Link>
                 </h2>
 
                 {/* Article Featured Image */}
                 {post.feature_image && (
-                  <Image
-                    src={post.feature_image}
-                    alt={post.feature_image_alt || `Image for ${post.title}`}
-                    width={1400}
-                    height={865}
-                    className="w-full h-auto rounded mb-6"
-                  />
+                  <div className="mt-3 mb-4">
+                    <Image
+                      src={post.feature_image}
+                      alt={post.feature_image_alt || `Image for ${post.title}`}
+                      width={1200}
+                      height={720}
+                      className="w-full h-auto rounded-lg"
+                      priority
+                    />
+                  </div>
                 )}
 
                 {/* Article Excerpt */}
-                <p className="text-lg mb-4">{post.excerpt}</p>
+                <p className="text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 break-words">
+                  {post.excerpt}
+                </p>
 
                 {/* Read More Link */}
                 <Link
@@ -76,7 +87,7 @@ export default async function Home() {
             ))
           ) : (
             // Fallback message when no articles are available
-            <p className="text-gray-500 text-center mt-8">
+            <p className="text-gray-500 text-center mt-12">
               No articles found. Please check back later.
             </p>
           )}

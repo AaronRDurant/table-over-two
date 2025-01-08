@@ -3,18 +3,12 @@ import Image from "next/image";
 
 import { getGhostPosts, getGhostPostBySlug } from "@/api/ghost";
 
-/**
- * Generates metadata for the page, used for SEO and social sharing.
- *
- * @param params - Contains the slug of the post (wrapped in a Promise-like structure).
- * @returns A `Metadata` object with the title, description, and Open Graph details.
- */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params; // Resolve the Promise-like `params`
+  const { slug } = await params;
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {
@@ -42,37 +36,27 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Generates static parameters for the dynamic `[slug]` route.
- * This function allows Next.js to pre-render pages for all posts.
- *
- * @returns An array of parameters, each containing a slug for a post.
- */
 export async function generateStaticParams() {
-  const posts = await getGhostPosts(100); // Fetch up to 100 posts
+  const posts = await getGhostPosts(100);
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-/**
- * Server component for rendering a single article page.
- *
- * @param params - Contains the slug of the post (wrapped in a Promise-like structure).
- * @returns The JSX markup for the article page or a 404 error message if the post is not found.
- */
 export default async function ArticlePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // Resolve the Promise-like `params`
+  const { slug } = await params;
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-background text-foreground">
         <div className="text-center">
-          <h1 className="text-4xl font-bold">404: Article Not Found</h1>
-          <p className="mt-4 text-lg">
+          <h1 className="text-3xl sm:text-4xl font-bold">
+            404: Article Not Found
+          </h1>
+          <p className="mt-4 text-base sm:text-lg">
             The article you&#39;re looking for doesn&#39;t exist.
           </p>
         </div>
@@ -81,22 +65,27 @@ export default async function ArticlePage({
   }
 
   return (
-    <div className="flex justify-center bg-background text-foreground">
-      <main className="max-w-3xl w-full px-8 py-12">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mt-2">{post.title}</h1>
-          <div className="flex items-center gap-4 mt-4">
+    <div className="flex justify-center bg-background text-foreground min-h-screen">
+      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12">
+        {/* Article Header */}
+        <header className="mb-6 sm:mb-8 md:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
+            {post.title}
+          </h1>
+
+          {/* Author and Date */}
+          <div className="flex items-center gap-3 mt-4">
             {post.primary_author?.profile_image && (
               <Image
                 src={post.primary_author.profile_image}
                 alt={post.primary_author.name || "Author"}
-                width={48}
-                height={48}
+                width={40}
+                height={40}
                 className="rounded-full"
               />
             )}
             <div>
-              <p className="text-lg font-semibold">
+              <p className="text-sm sm:text-base font-semibold">
                 {post.primary_author?.name}
               </p>
               <p className="text-sm text-gray-500">
@@ -108,13 +97,15 @@ export default async function ArticlePage({
               </p>
             </div>
           </div>
+
+          {/* Feature Image */}
           {post.feature_image && (
-            <div className="relative mt-6">
+            <div className="mt-4 sm:mt-6">
               <Image
                 src={post.feature_image}
                 alt={post.feature_image_alt || `Image for ${post.title}`}
-                width={1400}
-                height={865}
+                width={1200}
+                height={720}
                 className="w-full h-auto rounded"
               />
               {post.feature_image_caption && (
@@ -128,8 +119,10 @@ export default async function ArticlePage({
             </div>
           )}
         </header>
+
+        {/* Article Content */}
         <article
-          className="prose prose-lg max-w-none text-foreground"
+          className="prose prose-base sm:prose-lg max-w-none text-foreground leading-relaxed"
           dangerouslySetInnerHTML={{ __html: post.html || "" }}
         />
       </main>

@@ -54,8 +54,10 @@ export default function RootLayout({
       <body className="bg-background text-foreground antialiased font-sans">
         <ThemeProvider>
           <div className="flex justify-center">
-            <main className="max-w-3xl py-6 flex-grow">{children}</main>
-            <aside className="w-[260px]">
+            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow">
+              {children}
+            </main>
+            <aside>
               <Sidebar />
             </aside>
           </div>

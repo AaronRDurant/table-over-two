@@ -22,45 +22,53 @@ export default async function TopicsPage() {
   });
 
   return (
-    <div className="flex justify-center min-h-screen bg-background text-foreground">
-      <main className="max-w-4xl w-full px-2 sm:px-4 py-6">
+    <div className="flex justify-center bg-background text-foreground min-h-screen">
+      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12">
         {/* Page Title */}
-        <h1 className="text-2xl font-bold mb-4 pl-1">Topics</h1>
+        <header className="mb-6 sm:mb-8 md:mb-10">
+          <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
+            Topics
+          </h1>
+        </header>
 
         {/* Topics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {tags.map((tag) => (
             <div
               key={tag.id}
-              className="bg-card p-3 rounded-lg shadow-md flex flex-col"
+              className="bg-card p-4 rounded-lg shadow-md flex flex-col"
             >
               {/* Tag Image */}
               {tag.feature_image && (
                 <Image
                   src={tag.feature_image}
                   alt={`Image for ${tag.name}`}
-                  width={400} // Adjust the width as needed
-                  height={240} // Adjust the height as needed
-                  className="w-full h-[240px] object-cover rounded mb-2"
+                  width={600}
+                  height={371} // Golden ratio height
+                  className="w-full object-cover rounded mb-4"
                 />
               )}
 
               {/* Tag Name */}
-              <h2 className="text-lg font-semibold mb-1">{tag.name}</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-2">
+                {tag.name}
+              </h2>
 
               {/* Tag Description */}
               {tag.description && (
-                <p className="text-sm text-gray-600 mb-2">{tag.description}</p>
+                <p className="text-base text-gray-600 mb-4">
+                  {tag.description}
+                </p>
               )}
 
               {/* List of Articles */}
               {postsByTag[tag.slug] && postsByTag[tag.slug].length > 0 ? (
-                <ul className="space-y-1">
+                <ul className="list-disc ml-5 space-y-2">
                   {postsByTag[tag.slug].map((post) => (
                     <li key={post.id}>
                       <Link
                         href={`/${post.slug}`}
-                        className="text-link hover:underline"
+                        className="text-link hover:underline text-base"
                       >
                         {post.title}
                       </Link>
