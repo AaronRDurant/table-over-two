@@ -21,6 +21,15 @@ function groupPostsByYear(posts: Post[]): Record<string, Post[]> {
 }
 
 /**
+ * Dynamically generate metadata for the Archive page.
+ */
+export const generateMetadata = () => ({
+  title: "Archive • Table Over Two",
+  description:
+    "Explore the archive of Table Over Two's posts, grouped by year.",
+});
+
+/**
  * Archive Page
  * Displays all posts grouped by year.
  */
@@ -51,14 +60,25 @@ export default async function ArchivePage() {
         {Object.keys(groupedPosts)
           .sort((a, b) => Number(b) - Number(a)) // Sort years descending
           .map((year) => (
-            <section key={year} className="mb-8 sm:mb-10">
-              <h2 className="text-xl sm:text-2xl font-semibold mb-4">{year}</h2>
+            <section
+              key={year}
+              aria-labelledby={`year-${year}`}
+              className="mb-8 sm:mb-10"
+            >
+              {/* Year Heading */}
+              <h2
+                id={`year-${year}`}
+                className="text-xl sm:text-2xl font-semibold mb-4"
+              >
+                {year}
+              </h2>
               <ul className="space-y-6">
                 {groupedPosts[year].map((post: Post) => (
                   <li
                     key={post.id}
                     className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
                   >
+                    {/* Post Thumbnail (Desktop Only) */}
                     {post.feature_image && (
                       <div className="hidden sm:block">
                         <Image
@@ -74,6 +94,7 @@ export default async function ArchivePage() {
                       </div>
                     )}
                     <div>
+                      {/* Post Publication Date */}
                       <p className="text-sm text-gray-500">
                         {new Date(post.published_at).toLocaleDateString(
                           "en-US",
@@ -84,10 +105,12 @@ export default async function ArchivePage() {
                           }
                         )}
                       </p>
+                      {/* Post Title */}
                       <h3 className="text-lg sm:text-xl font-semibold">
                         <Link
                           href={`/${post.slug}`}
                           className="hover:underline block break-words"
+                          aria-label={`Read the article: ${post.title}`}
                         >
                           {post.title}
                         </Link>

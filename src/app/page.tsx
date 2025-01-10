@@ -12,8 +12,7 @@ export default async function Home() {
 
   try {
     // Fetch the latest 5 posts from the Ghost API
-    const result = await getGhostPosts(5);
-    posts = result || [];
+    posts = await getGhostPosts(5);
   } catch (error) {
     console.error("Error fetching posts:", error);
   }
@@ -24,7 +23,7 @@ export default async function Home() {
    * @param dateString - The date string to format.
    * @returns A formatted date string (e.g., "January 1, 2025").
    */
-  const formatDate = (dateString: string) =>
+  const formatDate = (dateString: string): string =>
     new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -34,7 +33,11 @@ export default async function Home() {
   return (
     <div className="flex justify-center bg-background text-foreground min-h-screen">
       <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 pb-6">
-        {/* Article Section */}
+        {/* Visually Hidden Headings for Accessibility */}
+        <h1 className="sr-only">Table Over Two</h1>
+        <h2 className="sr-only">Latest Articles</h2>
+
+        {/* Articles Section */}
         <section>
           {posts.length > 0 ? (
             posts.map((post) => (
@@ -52,6 +55,7 @@ export default async function Home() {
                   <Link
                     href={`/${post.slug}`}
                     className="hover:underline block break-words"
+                    aria-label={`Read the article ${post.title}`}
                   >
                     {post.title}
                   </Link>
@@ -62,7 +66,9 @@ export default async function Home() {
                   <div className="mt-3 mb-4">
                     <Image
                       src={post.feature_image}
-                      alt={post.feature_image_alt || `Image for ${post.title}`}
+                      alt={
+                        post.feature_image_alt || `Thumbnail for ${post.title}`
+                      }
                       width={1200}
                       height={720}
                       className="w-full h-auto rounded-lg"
@@ -80,6 +86,7 @@ export default async function Home() {
                 <Link
                   href={`/${post.slug}`}
                   className="text-link font-medium hover:underline inline-block"
+                  aria-label={`Continue reading: ${post.title}`}
                 >
                   Drop the gate →
                 </Link>

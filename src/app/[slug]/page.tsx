@@ -1,14 +1,19 @@
 import { Metadata } from "next";
 import Image from "next/image";
-
 import { getGhostPosts, getGhostPostBySlug } from "@/api/ghost";
 
+/**
+ * Generate metadata dynamically for the article page.
+ *
+ * @param params - Contains the slug of the article.
+ * @returns Metadata object for the page.
+ */
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>; // Fix: Changed type to Promise
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = await params; // Await the promise to get the slug
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {
@@ -19,8 +24,9 @@ export async function generateMetadata({
   }
 
   return {
-    title: post.title,
-    description: post.excerpt || "",
+    title: `${post.title} • Table Over Two`,
+    description:
+      post.excerpt || "Read the latest insights on motocross and Supercross.",
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
@@ -36,17 +42,28 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Generate static params for dynamic routing.
+ *
+ * @returns An array of params containing slugs for all articles.
+ */
 export async function generateStaticParams() {
   const posts = await getGhostPosts(100);
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+/**
+ * Article Page
+ * Displays the content of an individual article fetched from Ghost.
+ *
+ * @param params - Contains the slug of the article.
+ */
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>; // Fix: Changed type to Promise
 }) {
-  const { slug } = await params;
+  const { slug } = await params; // Await the promise to get the slug
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {

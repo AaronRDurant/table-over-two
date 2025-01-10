@@ -3,6 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 /**
+ * Dynamically generate metadata for the Topics page.
+ */
+export const generateMetadata = () => ({
+  title: "Topics • Table Over Two",
+  description: "Discover topics and explore articles on Table Over Two.",
+});
+
+/**
  * Topics Page
  * Displays all tags with their description, featured image, and associated articles.
  */
