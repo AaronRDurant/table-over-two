@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { getGhostPosts, getGhostPostBySlug } from "@/api/ghost";
 
 /**
@@ -26,7 +27,8 @@ export async function generateMetadata({
   return {
     title: `${post.title} • Table Over Two`,
     description:
-      post.excerpt || "Read the latest insights on motocross and Supercross.",
+      post.excerpt ||
+      "Read the latest insights on Supercross and Pro Motocross.",
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
@@ -122,7 +124,7 @@ export default async function ArticlePage({
                 src={post.feature_image}
                 alt={post.feature_image_alt || `Image for ${post.title}`}
                 width={1200}
-                height={720}
+                height={741}
                 className="w-full h-auto rounded"
               />
               {post.feature_image_caption && (
@@ -142,6 +144,27 @@ export default async function ArticlePage({
           className="prose prose-base sm:prose-lg max-w-none text-foreground leading-relaxed"
           dangerouslySetInnerHTML={{ __html: post.html || "" }}
         />
+
+        {/* Tags Section */}
+        {post.tags && post.tags.length > 0 && (
+          <footer className="mt-8">
+            <h2 className="sr-only">Tags</h2>
+            <div className="flex flex-wrap gap-2">
+              {post.tags
+                .sort((a, b) => a.name.localeCompare(b.name)) // Alphabetical order
+                .map((tag) => (
+                  <Link
+                    key={tag.slug}
+                    href={`/topics/${tag.slug}`} // Link to the corresponding tag page
+                    className="bg-gray-200 text-gray-700 px-3 py-1 text-sm font-medium rounded hover:bg-gray-300 hover:no-underline"
+                    aria-label={`View all posts tagged with ${tag.name}`}
+                  >
+                    {tag.name}
+                  </Link>
+                ))}
+            </div>
+          </footer>
+        )}
       </main>
     </div>
   );

@@ -53,11 +53,14 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-foreground antialiased font-sans">
         <ThemeProvider>
-          <div className="flex justify-center">
-            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow">
+          <div className="flex justify-center min-h-screen">
+            {/* Main Content with Right Border */}
+            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r border-[var(--accent)]">
               {children}
             </main>
-            <aside>
+
+            {/* Sidebar */}
+            <aside className="h-full">
               <Sidebar />
             </aside>
           </div>

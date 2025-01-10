@@ -164,6 +164,41 @@ export async function getGhostPageBySlug(slug: string): Promise<Post | null> {
 }
 
 /**
+ * Fetches posts by a specific tag slug from the Ghost API.
+ *
+ * @param tagSlug - The slug of the tag to filter posts by.
+ * @param limit - The maximum number of posts to retrieve (default is 5).
+ * @returns A list of posts for the given tag, or an empty array if the fetch fails.
+ */
+export async function getPostsByTagSlug(
+  tagSlug: string,
+  limit: number = 5
+): Promise<Post[]> {
+  const url = buildUrl("posts", {
+    filter: `tag:${tagSlug}`,
+    limit,
+    include: "tags,authors",
+  });
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts for tag: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return Array.isArray(data.posts) ? data.posts : [];
+  } catch (error: unknown) {
+    console.error(
+      `Error fetching posts for tag ${tagSlug}:`,
+      error instanceof Error ? error.message : error
+    );
+    return [];
+  }
+}
+
+/**
  * Fetches all tags from the Ghost API.
  *
  * @returns A list of tags, or an empty array if the fetch fails.

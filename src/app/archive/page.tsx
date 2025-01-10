@@ -88,7 +88,7 @@ export default async function ArchivePage() {
                             `Thumbnail for ${post.title}`
                           }
                           width={120}
-                          height={72}
+                          height={74}
                           className="rounded object-cover"
                         />
                       </div>

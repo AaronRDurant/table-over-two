@@ -52,7 +52,7 @@ export default async function TopicsPage() {
                   src={tag.feature_image}
                   alt={`Image for ${tag.name}`}
                   width={600}
-                  height={371} // Golden ratio height
+                  height={371}
                   className="w-full object-cover rounded mb-4"
                 />
               )}
@@ -88,6 +88,14 @@ export default async function TopicsPage() {
                   No articles available for this topic yet.
                 </p>
               )}
+
+              {/* View All Link */}
+              <Link
+                href={`/topics/${tag.slug}`}
+                className="mt-4 text-link font-medium hover:underline self-start"
+              >
+                View all →
+              </Link>
             </div>
           ))}
         </div>

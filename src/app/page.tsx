@@ -70,7 +70,7 @@ export default async function Home() {
                         post.feature_image_alt || `Thumbnail for ${post.title}`
                       }
                       width={1200}
-                      height={720}
+                      height={741}
                       className="w-full h-auto rounded-lg"
                       priority
                     />

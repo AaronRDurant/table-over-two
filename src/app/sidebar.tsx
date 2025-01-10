@@ -138,9 +138,9 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 right-0 h-full z-40 bg-background shadow-lg p-6 border-l border-[var(--accent)] transition-transform w-full sm:w-[260px] ${
+        className={`fixed top-0 right-0 h-full z-40 bg-background shadow-lg p-6 transition-transform w-full sm:w-[260px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
-        } sm:translate-x-0 sm:relative sm:top-auto sm:right-auto sm:h-auto sm:shadow-none sm:border-l max-w-[220px] sm:max-w-none pt-20 sm:pt-6`}
+        } sm:translate-x-0 sm:relative sm:top-auto sm:right-auto sm:h-auto sm:shadow-none max-w-[220px] sm:max-w-none pt-20 sm:pt-6`}
       >
         {/* Desktop Logo and Site Title */}
         <div className="hidden sm:flex items-center mb-6">
