@@ -40,9 +40,9 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }: {
-  params: Promise<{ tagSlug: string }>; // Adjusted to a Promise
+  params: Promise<{ tagSlug: string }>;
 }) {
-  const { tagSlug } = await params; // Await the resolved promise
+  const { tagSlug } = await params;
   const tags = await getGhostTags();
   const tag = tags.find((t) => t.slug === tagSlug);
 
@@ -69,9 +69,25 @@ export default async function TagPage({
       <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12">
         {/* Page Title */}
         <header className="mb-6 sm:mb-8 md:mb-10">
+          {tag.feature_image && (
+            <div className="relative w-full aspect-[1.618/1] mb-6">
+              <Image
+                src={tag.feature_image}
+                alt={tag.name}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
+            </div>
+          )}
           <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
             {tag.name}
           </h1>
+          {tag.description && (
+            <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+              {tag.description}
+            </p>
+          )}
         </header>
 
         {/* Posts List */}
