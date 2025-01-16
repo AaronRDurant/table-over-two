@@ -64,7 +64,7 @@ export default async function TopicsPage() {
 
               {/* Tag Description */}
               {tag.description && (
-                <p className="text-base text-gray-600 mb-4">
+                <p className="text-base text-secondary mb-4">
                   {tag.description}
                 </p>
               )}

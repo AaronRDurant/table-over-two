@@ -51,10 +51,17 @@ export default async function AboutPage() {
           </h1>
         </header>
 
-        {/* Page Content */}
+        {/* Page Content with Styling for Figure and Captions */}
         <section
           className="prose prose-base sm:prose-lg max-w-none text-foreground leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: aboutPage.html || "" }}
+          dangerouslySetInnerHTML={{
+            __html: aboutPage.html
+              ? aboutPage.html.replace(
+                  /<figcaption>/g,
+                  '<figcaption class="kg-card kg-image-card">'
+                )
+              : "",
+          }}
         />
       </main>
     </div>

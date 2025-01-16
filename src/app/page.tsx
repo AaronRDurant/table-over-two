@@ -32,7 +32,7 @@ export default async function Home() {
 
   return (
     <div className="flex justify-center bg-background text-foreground min-h-screen">
-      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 pb-6">
+      <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 pb-16">
         {/* Visually Hidden Headings for Accessibility */}
         <h1 className="sr-only">Table Over Two</h1>
         <h2 className="sr-only">Latest Articles</h2>
@@ -46,7 +46,7 @@ export default async function Home() {
                 className="border-b border-accent py-6 sm:py-8"
               >
                 {/* Article Publication Date */}
-                <p className="text-sm sm:text-base text-gray-500 mb-2">
+                <p className="text-sm sm:text-base text-secondary mb-2">
                   {formatDate(post.published_at)}
                 </p>
 

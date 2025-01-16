@@ -5,7 +5,8 @@ import Sidebar from "./sidebar";
 
 export const metadata: Metadata = {
   title: "Table Over Two",
-  description: "Breaking down motocross success.",
+  description:
+    "Table Over Two explores what drives success in Supercross and motocross.",
   openGraph: {
     url: "https://www.tableovertwo.com",
     images: [
@@ -27,7 +28,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Favicon and App Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link
@@ -48,13 +48,10 @@ export default function RootLayout({
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
-        <link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
       </head>
-      <body className="bg-background text-foreground antialiased font-sans">
+      <body className="antialiased font-sans">
         <ThemeProvider>
-          <div className="flex justify-center min-h-screen">
-            {/* Main Content with Right Border */}
+          <div className="flex justify-center min-h-screen bg-background text-foreground">
             <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r border-[var(--accent)]">
               {children}
             </main>

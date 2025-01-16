@@ -12,7 +12,7 @@ import { getGhostPosts, getGhostPostBySlug } from "@/api/ghost";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>; // Fix: Changed type to Promise
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params; // Await the promise to get the slug
   const post = await getGhostPostBySlug(slug);
@@ -107,7 +107,7 @@ export default async function ArticlePage({
               <p className="text-sm sm:text-base font-semibold">
                 {post.primary_author?.name}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-secondary">
                 {new Date(post.published_at).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -129,7 +129,7 @@ export default async function ArticlePage({
               />
               {post.feature_image_caption && (
                 <p
-                  className="text-sm text-gray-500 mt-2 text-right"
+                  className="feature-image-caption"
                   dangerouslySetInnerHTML={{
                     __html: post.feature_image_caption,
                   }}
@@ -156,7 +156,7 @@ export default async function ArticlePage({
                   <Link
                     key={tag.slug}
                     href={`/topics/${tag.slug}`} // Link to the corresponding tag page
-                    className="bg-gray-200 text-gray-700 px-3 py-1 text-sm font-medium rounded hover:bg-gray-300 hover:no-underline"
+                    className="bg-gray-100 text-gray-900 border border-gray-300 px-3 py-1 text-sm font-medium rounded hover:text-gray-800 hover:border-gray-400 hover:no-underline"
                     aria-label={`View all posts tagged with ${tag.name}`}
                   >
                     {tag.name}

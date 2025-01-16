@@ -95,7 +95,7 @@ export default async function ArchivePage() {
                     )}
                     <div>
                       {/* Post Publication Date */}
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-secondary">
                         {new Date(post.published_at).toLocaleDateString(
                           "en-US",
                           {

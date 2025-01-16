@@ -159,7 +159,7 @@ export default function Sidebar() {
               key={href}
               href={href}
               onClick={() => setIsOpen(false)} // Close sidebar when a link is clicked
-              className="text-lg font-semibold hover:underline"
+              className="block w-fit text-lg font-semibold hover:underline" // Restrict clickable area
             >
               {label}
             </Link>
@@ -185,7 +185,7 @@ export default function Sidebar() {
             ))}
           </div>
           <div
-            className="mt-4 text-sm text-gray-500"
+            className="mt-4 text-sm text-secondary"
             style={{ minHeight: "1.5rem" }}
           >
             {team !== "default" && teamThemes[team].teamName}
@@ -194,6 +194,9 @@ export default function Sidebar() {
           <button
             onClick={toggleTheme}
             className="flex items-center space-x-1 hover:underline mt-2"
+            aria-label={`Switch to ${
+              theme === "light" ? "dark" : "light"
+            } mode`}
           >
             {theme === "light" ? (
               <>
@@ -239,7 +242,8 @@ export default function Sidebar() {
             <h2 className="text-lg font-bold mb-3">Connect</h2>
             <ul className="space-y-2">
               {memoizedConnectLinks.map(({ href, label, icon, color }) => (
-                <li key={href}>
+                <li key={href} className="w-fit">
+                  {" "}
                   <a
                     href={href}
                     className="flex items-center text-sm hover:underline"
@@ -259,10 +263,10 @@ export default function Sidebar() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-8 text-xs text-gray-600">
+        <div className="mt-8 text-xs text-secondary">
           <p>
-            <strong>Table Over Two</strong>: Breaking down motocross success
-            since 2025.
+            <strong>Table Over Two</strong>: Exploring motocross success since
+            2025.
           </p>
         </div>
       </aside>

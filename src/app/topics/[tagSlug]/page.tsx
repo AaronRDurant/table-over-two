@@ -83,8 +83,10 @@ export default async function TagPage({
           <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
             {tag.name}
           </h1>
+
+          {/* Tag Description */}
           {tag.description && (
-            <p className="mt-4 text-gray-600 text-sm sm:text-base leading-relaxed">
+            <p className="mt-4 text-secondary text-sm sm:text-base leading-relaxed">
               {tag.description}
             </p>
           )}
@@ -114,13 +116,15 @@ export default async function TagPage({
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500">
+                    {/* Post Published Date */}
+                    <p className="text-sm text-secondary-muted">
                       {new Date(post.published_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
                       })}
                     </p>
+
                     <h3 className="text-lg sm:text-xl font-semibold">
                       <Link
                         href={`/${post.slug}`}

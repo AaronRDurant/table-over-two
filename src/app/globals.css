@@ -2,37 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Theme Variables ---------- */
+
 /* Light Mode */
 :root {
-  --background: #f5f5f1; /* Soft warm gray */
-  --foreground: #222222; /* Nearly black for strong contrast */
-  --link: #1a73e8; /* Modern blue for links */
-  --text: #222222; /* Default dark text for light mode */
-  --accent: #cccccc; /* Neutral gray accent for default theme */
+  --background: #ffffff;
+  --foreground: #181818;
+  --text: #2c2c2c;
+  --secondary-text: #575757;
+  --link: #1e73e8;
+  --accent: #cccccc;
 }
 
 /* Dark Mode */
 [data-theme="dark"] {
-  --background: #000000; /* Default dark mode background */
-  --foreground: #d1d1d1; /* Softer light gray for reduced strain */
-  --link: #bb86fc; /* Default dark mode link color */
-  --text: #ffffff; /* Default white text for dark mode */
-  --accent: #444444; /* Default accent for dark mode */
+  --background: #1f1f1f;
+  --foreground: #f9f9f9;
+  --text: #cccccc;
+  --secondary-text: #999999;
+  --link: #3a8dff;
+  --accent: #444444;
 }
 
-/* Specific adjustments for Husqvarna dark mode */
-[data-theme="dark"][data-team="husqvarna"] {
-  --background: #273a60; /* Husqvarna's unique background */
-  --link: #ffed00; /* Husqvarna yellow for links */
-  --accent: #ffed00; /* Husqvarna yellow for accents */
-}
+/* ---------- Global Styles ---------- */
 
+/* Body Styles */
 body {
   color: var(--text);
   background-color: var(--background);
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
 }
 
+/* Link Styles */
 a {
   color: var(--link);
   text-decoration: none;
@@ -40,9 +41,10 @@ a {
 
 a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 2px; /* Subtle hover effect */
 }
 
+/* Heading Styles */
 h1,
 h2,
 h3,
@@ -52,10 +54,82 @@ h6 {
   color: var(--foreground);
 }
 
+/* Utility Classes */
 .text-foreground {
   color: var(--text);
 }
 
+.text-secondary {
+  color: var(--secondary-text);
+}
+
 .border-accent {
   border-color: var(--accent);
+}
+
+/* ---------- Media and Images ---------- */
+
+/* Images and Captions */
+figure.kg-card.kg-image-card {
+  margin: 1.5rem 0;
+}
+
+figure.kg-card.kg-image-card img {
+  @apply w-full h-auto rounded; /* Consistent image styling */
+}
+
+figure.kg-card.kg-image-card figcaption {
+  @apply text-sm mt-2; /* Caption styling */
+  color: var(--secondary-text); /* Match secondary text color */
+  white-space: pre-wrap; /* Preserve formatting */
+  text-align: left; /* Left-align all captions */
+}
+
+/* Featured Image Captions */
+.feature-image-caption {
+  @apply text-sm mt-2 text-right; /* Right alignment for featured images */
+  color: var(--secondary-text); /* Match secondary text color */
+  white-space: pre-wrap;
+}
+
+/* ---------- Typography ---------- */
+
+/* Prose Styling */
+.prose a {
+  color: var(--link); /* Ensure links in rich text follow theme colors */
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px; /* Modern hover style */
+}
+
+[data-theme="dark"] .prose h1,
+[data-theme="dark"] .prose h2,
+[data-theme="dark"] .prose h3,
+[data-theme="dark"] .prose h4,
+[data-theme="dark"] .prose h5,
+[data-theme="dark"] .prose h6 {
+  color: var(--foreground); /* Ensure headings are prominent in dark mode */
+}
+
+[data-theme="dark"] .prose strong {
+  color: var(--foreground); /* Ensure bold text stands out in dark mode */
+}
+
+/* ---------- Miscellaneous ---------- */
+
+/* Scrollbars */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--foreground);
 }

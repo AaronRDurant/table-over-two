@@ -2,75 +2,69 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-// Define the shape of the ThemeContext
-type ThemeContextType = {
-  theme: "light" | "dark"; // Current theme (light or dark)
-  toggleTheme: () => void; // Function to toggle theme
-  team: keyof typeof teamThemes; // Current team theme
-  setTeam: (team: keyof typeof teamThemes) => void; // Function to update team theme
-};
-
-// Define the structure of a team theme
+// Define the shape of each team's theme
 type TeamTheme = {
-  accent: string; // Accent color
-  link: string; // Link color
-  bubble: string; // Color for bubble elements
-  teamName: string; // Display name of the team
+  accent: string;
+  link: string;
+  bubble: string;
+  teamName: string;
   dark?: {
-    background?: string; // Background color for dark mode
-    link?: string; // Link color for dark mode
-    accent?: string; // Accent color for dark mode
+    link?: string;
+    accent?: string;
   };
 };
 
-// Create a context for theme management
+// Define the shape of the ThemeContext
+type ThemeContextType = {
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+  team: keyof typeof teamThemes;
+  setTeam: (team: keyof typeof teamThemes) => void;
+};
+
+// Create the ThemeContext
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Define themes for each team
+// Define team themes with type annotation
 export const teamThemes: Record<string, TeamTheme> = {
   default: {
     accent: "#cccccc",
-    link: "#1a73e8",
+    link: "#1e73e8",
     bubble: "#cccccc",
     teamName: "",
+    dark: {
+      link: "#3a8dff",
+    },
   },
   yamaha: {
-    accent: "#024DCA",
-    link: "#000000",
-    bubble: "#024DCA",
+    accent: "#95D600",
+    link: "#0D47F7",
+    bubble: "#0b39a0",
     teamName: "Star Racing Yamaha",
     dark: {
-      link: "#024DCA",
-      accent: "#95D600",
+      link: "#4185F4",
     },
   },
   honda: {
     accent: "#0033A0",
     link: "#CC0000",
     bubble: "#CC0000",
-    teamName: "Team Honda HRC",
-    dark: {
-      link: "#CC0000",
-    },
+    teamName: "Honda HRC Progressive",
   },
   kawasaki: {
     accent: "#95D600",
-    link: "#000000",
+    link: "#6B9900",
     bubble: "#95D600",
     teamName: "Monster Energy Kawasaki",
     dark: {
       link: "#95D600",
-      accent: "#95D600",
     },
   },
   ktm: {
     accent: "#FF6600",
-    link: "#000000",
+    link: "#FF6600",
     bubble: "#FF6600",
     teamName: "Red Bull KTM",
-    dark: {
-      link: "#FF6600",
-    },
   },
   gasgas: {
     accent: "#CF9C43",
@@ -88,13 +82,12 @@ export const teamThemes: Record<string, TeamTheme> = {
     bubble: "#273A60",
     teamName: "Rockstar Energy Husqvarna",
     dark: {
-      background: "#273A60",
+      accent: "#273A60",
       link: "#FFED00",
-      accent: "#FFED00",
     },
   },
   triumph: {
-    accent: "#F0FF00",
+    accent: "#D4D700",
     link: "#000000",
     bubble: "#F0FF00",
     teamName: "Triumph Factory Racing",
@@ -104,113 +97,66 @@ export const teamThemes: Record<string, TeamTheme> = {
   },
 };
 
-// ThemeProvider Component
+// ThemeProvider component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null); // Theme state
-  const [team, setTeam] = useState<keyof typeof teamThemes>("default"); // Team state
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [team, setTeam] = useState<keyof typeof teamThemes>("default");
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  /**
-   * Applies CSS variables based on the current theme and team.
-   *
-   * @param theme - Current theme (light or dark).
-   * @param team - Current team name.
-   */
-  const applyThemeVariables = (theme: "light" | "dark", team: string) => {
-    const teamColors = teamThemes[team] || teamThemes.default;
-    const isDarkMode = theme === "dark";
-
-    document.documentElement.style.setProperty(
-      "--accent",
-      isDarkMode && teamColors.dark?.accent
-        ? teamColors.dark.accent
-        : teamColors.accent
-    );
-    document.documentElement.style.setProperty(
-      "--link",
-      isDarkMode && teamColors.dark?.link
-        ? teamColors.dark.link
-        : teamColors.link
-    );
-    document.documentElement.style.setProperty(
-      "--background",
-      isDarkMode && teamColors.dark?.background
-        ? teamColors.dark.background
-        : isDarkMode
-        ? "#000000"
-        : "#f5f5f1"
-    );
-    document.documentElement.style.setProperty(
-      "--foreground",
-      isDarkMode ? "#ffffff" : "#222222"
-    );
-    document.documentElement.style.setProperty(
-      "--text",
-      isDarkMode ? "#ffffff" : "#222222"
-    );
-  };
-
-  // Load saved preferences from localStorage on mount
   useEffect(() => {
-    const savedTheme =
-      (localStorage.getItem("theme") as "light" | "dark") || "light";
-    const savedTeam =
-      (localStorage.getItem("team") as keyof typeof teamThemes) || "default";
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("theme") as
+        | "light"
+        | "dark"
+        | null;
+      const savedTeam = localStorage.getItem("team") as
+        | keyof typeof teamThemes
+        | null;
 
-    setTheme(savedTheme);
-    setTeam(savedTeam);
-
-    // Apply initial theme variables
-    applyThemeVariables(savedTheme, savedTeam);
+      setTheme(savedTheme || "light");
+      setTeam(savedTeam || "default");
+      setIsHydrated(true);
+    }
   }, []);
 
-  // Update CSS variables when theme or team changes
   useEffect(() => {
-    if (theme && team) {
-      applyThemeVariables(theme, team);
+    if (isHydrated) {
+      const root = document.documentElement;
+      const teamColors = teamThemes[team];
+
+      root.setAttribute("data-theme", theme);
+
+      const linkColor =
+        theme === "dark" && teamColors.dark?.link
+          ? teamColors.dark.link
+          : teamColors.link || "#3a8dff";
+
+      const accentColor =
+        theme === "dark" && teamColors.dark?.accent
+          ? teamColors.dark.accent
+          : teamColors.accent;
+
+      root.style.setProperty("--accent", accentColor);
+      root.style.setProperty("--link", linkColor);
+
+      localStorage.setItem("theme", theme);
+      localStorage.setItem("team", team);
     }
-  }, [theme, team]);
+  }, [theme, team, isHydrated]);
 
-  /**
-   * Toggles between light and dark themes.
-   */
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  /**
-   * Updates the active team theme.
-   *
-   * @param newTeam - The new team to apply.
-   */
-  const updateTeam = (newTeam: keyof typeof teamThemes) => {
-    setTeam(newTeam);
-    localStorage.setItem("team", newTeam);
-  };
-
-  // Ensure the component doesn't render until hydration
-  if (theme === null) return null;
+  if (!isHydrated) return null;
 
   return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-        team,
-        setTeam: updateTeam,
-      }}
-    >
+    <ThemeContext.Provider value={{ theme, toggleTheme, team, setTeam }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-/**
- * Custom hook to use the ThemeContext.
- *
- * @returns The current theme context values.
- */
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
