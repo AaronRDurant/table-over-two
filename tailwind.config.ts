@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class", // Use class-based dark mode
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}", // Include page-level components
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}", // Include app directory components

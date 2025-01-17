@@ -1,7 +1,7 @@
 import { getGhostPosts } from "@/api/ghost";
 import Link from "next/link";
 import Image from "next/image";
-import { Post } from "@/types/post";
+import { Post } from "@/types";
 
 /**
  * Homepage
@@ -54,7 +54,7 @@ export default async function Home() {
                 <h2 className="text-xl sm:text-2xl font-semibold leading-snug">
                   <Link
                     href={`/${post.slug}`}
-                    className="hover:underline block break-words"
+                    className="hover:underline break-words"
                     aria-label={`Read the article ${post.title}`}
                   >
                     {post.title}

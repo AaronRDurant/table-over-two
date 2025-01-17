@@ -12,6 +12,8 @@
   --secondary-text: #575757;
   --link: #1e73e8;
   --accent: #cccccc;
+  --tag-card-bg: #f6f6f6;
+  --tag-desc-text: #2c2c2c;
 }
 
 /* Dark Mode */
@@ -22,6 +24,8 @@
   --secondary-text: #999999;
   --link: #3a8dff;
   --accent: #444444;
+  --tag-card-bg: #181818;
+  --tag-desc-text: #cccccc;
 }
 
 /* ---------- Global Styles ---------- */
@@ -31,17 +35,20 @@ body {
   color: var(--text);
   background-color: var(--background);
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  margin: 0; /* Reset margin for consistency */
+  padding: 0; /* Reset padding for consistency */
 }
 
 /* Link Styles */
 a {
   color: var(--link);
   text-decoration: none;
+  transition: color 0.2s ease-in-out, text-decoration-thickness 0.2s ease-in-out;
 }
 
 a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px; /* Subtle hover effect */
+  text-decoration-thickness: 2px;
 }
 
 /* Heading Styles */
@@ -52,6 +59,8 @@ h4,
 h5,
 h6 {
   color: var(--foreground);
+  margin: 0; /* Remove default margins for consistency */
+  font-weight: bold; /* Ensure all headings are bold for hierarchy clarity */
 }
 
 /* Utility Classes */
@@ -79,16 +88,16 @@ figure.kg-card.kg-image-card img {
 }
 
 figure.kg-card.kg-image-card figcaption {
-  @apply text-sm mt-2; /* Caption styling */
-  color: var(--secondary-text); /* Match secondary text color */
-  white-space: pre-wrap; /* Preserve formatting */
-  text-align: left; /* Left-align all captions */
+  @apply text-sm mt-2;
+  color: var(--secondary-text);
+  white-space: pre-wrap;
+  text-align: left;
 }
 
 /* Featured Image Captions */
 .feature-image-caption {
-  @apply text-sm mt-2 text-right; /* Right alignment for featured images */
-  color: var(--secondary-text); /* Match secondary text color */
+  @apply text-sm mt-2 text-right;
+  color: var(--secondary-text);
   white-space: pre-wrap;
 }
 
@@ -96,13 +105,14 @@ figure.kg-card.kg-image-card figcaption {
 
 /* Prose Styling */
 .prose a {
-  color: var(--link); /* Ensure links in rich text follow theme colors */
+  color: var(--link);
   text-decoration: none;
+  transition: color 0.2s ease-in-out;
 }
 
 .prose a:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px; /* Modern hover style */
+  text-decoration-thickness: 2px;
 }
 
 [data-theme="dark"] .prose h1,
@@ -111,14 +121,25 @@ figure.kg-card.kg-image-card figcaption {
 [data-theme="dark"] .prose h4,
 [data-theme="dark"] .prose h5,
 [data-theme="dark"] .prose h6 {
-  color: var(--foreground); /* Ensure headings are prominent in dark mode */
+  color: var(--foreground);
 }
 
 [data-theme="dark"] .prose strong {
-  color: var(--foreground); /* Ensure bold text stands out in dark mode */
+  color: var(--foreground);
 }
 
 /* ---------- Miscellaneous ---------- */
+
+/* Tag Card Styles */
+.tag-card {
+  background-color: var(--tag-card-bg);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.tag-description {
+  color: var(--tag-desc-text);
+  transition: color 0.2s ease-in-out;
+}
 
 /* Scrollbars */
 body::-webkit-scrollbar {
@@ -128,8 +149,20 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-thumb {
   background-color: var(--accent);
   border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
 }
 
 body::-webkit-scrollbar-thumb:hover {
   background-color: var(--foreground);
+}
+
+/* ---------- Performance & Accessibility Enhancements ---------- */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none;
+    transition: none;
+    scroll-behavior: auto;
+  }
 }

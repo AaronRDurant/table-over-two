@@ -1,7 +1,21 @@
-import { Metadata } from "next";
-import { getGhostPosts, getGhostTags, Post } from "@/api/ghost";
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
+import { getGhostPosts, getGhostTags } from "@/api/ghost";
+import { Post } from "@/types";
+
+/**
+ * Map of tag slugs to photo credits.
+ */
+const photoCredits: Record<string, string> = {
+  "2025-supercross": "Honda",
+  "anaheim-1": "Align Media/KTM",
+  "chase-sexton": "Align Media/KTM",
+  "jo-shimoda": "Honda",
+  media: "Align Media/KTM",
+  supercross: "Honda",
+  "table-over-two": "Honda",
+};
 
 /**
  * Dynamically generate metadata for tag pages.
@@ -27,7 +41,7 @@ export async function generateMetadata({
 
   return {
     title: `${tag.name} • Table Over Two`,
-    description: tag.description || `Posts tagged with ${tag.name}.`,
+    description: tag.description || `Explore posts tagged with ${tag.name}.`,
   };
 }
 
@@ -52,7 +66,7 @@ export default async function TagPage({
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold">Tag Not Found</h1>
           <p className="mt-4 text-base sm:text-lg">
-            The tag you&#39;re looking for doesn&#39;t exist.
+            The tag you&#39;re looking for does not exist.
           </p>
         </div>
       </div>
@@ -70,23 +84,29 @@ export default async function TagPage({
         {/* Page Title */}
         <header className="mb-6 sm:mb-8 md:mb-10">
           {tag.feature_image && (
-            <div className="relative w-full aspect-[1.618/1] mb-6">
-              <Image
-                src={tag.feature_image}
-                alt={tag.name}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
-              />
+            <div>
+              <div className="relative w-full aspect-[1.618/1] mb-2">
+                <Image
+                  src={tag.feature_image}
+                  alt={tag.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                  priority
+                />
+              </div>
+              <p className="feature-image-caption text-sm text-secondary">
+                {photoCredits[tagSlug] || "Unknown"}
+              </p>
             </div>
           )}
-          <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-[2.25rem] font-bold leading-tight mt-4">
             {tag.name}
           </h1>
 
           {/* Tag Description */}
           {tag.description && (
-            <p className="mt-4 text-secondary text-sm sm:text-base leading-relaxed">
+            <p className="mt-4 text-foreground text-sm sm:text-base leading-relaxed">
               {tag.description}
             </p>
           )}
@@ -101,6 +121,7 @@ export default async function TagPage({
                   key={post.id}
                   className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
                 >
+                  {/* Post Thumbnail */}
                   {post.feature_image && (
                     <div className="hidden sm:block">
                       <Image
@@ -115,9 +136,11 @@ export default async function TagPage({
                       />
                     </div>
                   )}
+
+                  {/* Post Details */}
                   <div>
                     {/* Post Published Date */}
-                    <p className="text-sm text-secondary-muted">
+                    <p className="text-sm text-secondary">
                       {new Date(post.published_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -125,6 +148,7 @@ export default async function TagPage({
                       })}
                     </p>
 
+                    {/* Post Title */}
                     <h3 className="text-lg sm:text-xl font-semibold">
                       <Link
                         href={`/${post.slug}`}

@@ -185,7 +185,7 @@ export default function Sidebar() {
             ))}
           </div>
           <div
-            className="mt-4 text-sm text-secondary"
+            className="mt-4 text-sm text-foreground"
             style={{ minHeight: "1.5rem" }}
           >
             {team !== "default" && teamThemes[team].teamName}
@@ -263,7 +263,7 @@ export default function Sidebar() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-8 text-xs text-secondary">
+        <div className="mt-8 text-xs text-foreground">
           <p>
             <strong>Table Over Two</strong>: Exploring motocross success since
             2025.
@@ -272,9 +272,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Content Padding for Mobile */}
-      <main className="pt-[4.5rem] sm:pt-0">
-        {/* Your main content here */}
-      </main>
+      <main className="pt-[4.5rem] sm:pt-0">{/* Main content here */}</main>
     </div>
   );
 }

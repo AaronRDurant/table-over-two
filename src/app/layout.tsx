@@ -52,7 +52,7 @@ export default function RootLayout({
       <body className="antialiased font-sans">
         <ThemeProvider>
           <div className="flex justify-center min-h-screen bg-background text-foreground">
-            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r border-[var(--accent)]">
+            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r-0 sm:border-r border-[var(--accent)]">
               {children}
             </main>
 

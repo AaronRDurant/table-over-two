@@ -1,7 +1,7 @@
 import { getGhostPosts } from "@/api/ghost";
 import Link from "next/link";
 import Image from "next/image";
-import { Post } from "@/types/post";
+import { Post } from "@/types";
 
 /**
  * Groups posts by year.
