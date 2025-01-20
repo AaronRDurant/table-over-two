@@ -10,11 +10,21 @@ import { Post } from "@/types";
 const photoCredits: Record<string, string> = {
   "2025-supercross": "Honda",
   "anaheim-1": "Align Media/KTM",
-  "chase-sexton": "Align Media/KTM",
+  "austin-forkner": "Feld Entertainment, Inc.",
+  "chase-sexton": "Simon Cudby/KTM",
+  "cooper-webb": "Feld Entertainment, Inc.",
+  "eli-tomac": "Star Racing Yamaha",
+  "jason-anderson": "Feld Entertainment, Inc.",
+  "jett-lawrence": "Honda",
   "jo-shimoda": "Honda",
+  "julien-beaumer": "Simon Cudby/KTM",
+  "justin-barcia": "Align Media/GasGas",
   media: "Align Media/KTM",
+  "monster-energy-pro-circuit-kawasaki": "Feld Entertainment, Inc.",
+  "san-diego": "Align Media/KTM",
   supercross: "Honda",
   "table-over-two": "Honda",
+  "triumph-factory-racing": "Feld Entertainment, Inc.",
 };
 
 /**
