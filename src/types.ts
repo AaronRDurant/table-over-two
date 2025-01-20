@@ -22,3 +22,16 @@ export type Tag = {
   description?: string;
   feature_image?: string;
 };
+
+export type OGImageDescriptor = {
+  url: string | URL;
+  alt?: string;
+  width?: number;
+  height?: number;
+  type?: string;
+};
+
+export type TwitterImageDescriptor = {
+  url: string | URL;
+  alt?: string;
+};

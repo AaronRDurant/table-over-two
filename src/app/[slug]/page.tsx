@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params; // Await the promise to get the slug
+  const { slug } = await params;
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {
@@ -37,9 +37,16 @@ export async function generateMetadata({
           url: post.feature_image || "/default-og-image.jpg",
           width: 1200,
           height: 630,
-          alt: post.feature_image_alt || "Table Over Two Article",
+          alt:
+            post.feature_image_alt || "Table Over Two motocross article photo",
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt || "",
+      images: [post.feature_image || "/default-og-image.jpg"],
     },
   };
 }
@@ -156,7 +163,7 @@ export default async function ArticlePage({
                   <Link
                     key={tag.slug}
                     href={`/topics/${tag.slug}`} // Link to the corresponding tag page
-                    className="bg-gray-100 text-gray-900 border border-gray-300 px-3 py-1 text-sm font-medium rounded hover:text-gray-800 hover:border-gray-400 hover:no-underline"
+                    className="tag-button px-3 py-1 text-sm font-medium rounded border transition-colors duration-200 hover:no-underline"
                     aria-label={`View all posts tagged with ${tag.name}`}
                   >
                     {tag.name}

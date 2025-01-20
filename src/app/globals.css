@@ -14,6 +14,7 @@
   --accent: #cccccc;
   --tag-card-bg: #f6f6f6;
   --tag-desc-text: #2c2c2c;
+  --tag-border-initial: #ccc;
 }
 
 /* Dark Mode */
@@ -26,6 +27,7 @@
   --accent: #444444;
   --tag-card-bg: #181818;
   --tag-desc-text: #cccccc;
+  --tag-border-initial: #555;
 }
 
 /* ---------- Global Styles ---------- */
@@ -35,15 +37,16 @@ body {
   color: var(--text);
   background-color: var(--background);
   font-family: var(--font-sans, Arial, Helvetica, sans-serif);
-  margin: 0; /* Reset margin for consistency */
-  padding: 0; /* Reset padding for consistency */
+  margin: 0;
+  padding: 0;
+  line-height: 1.5; /* Ensure consistent readability */
 }
 
 /* Link Styles */
 a {
   color: var(--link);
   text-decoration: none;
-  transition: color 0.2s ease-in-out, text-decoration-thickness 0.2s ease-in-out;
+  transition: color 0.2s ease, text-decoration-thickness 0.2s ease;
 }
 
 a:hover {
@@ -59,8 +62,8 @@ h4,
 h5,
 h6 {
   color: var(--foreground);
-  margin: 0; /* Remove default margins for consistency */
-  font-weight: bold; /* Ensure all headings are bold for hierarchy clarity */
+  margin: 0;
+  font-weight: bold;
 }
 
 /* Utility Classes */
@@ -84,7 +87,7 @@ figure.kg-card.kg-image-card {
 }
 
 figure.kg-card.kg-image-card img {
-  @apply w-full h-auto rounded; /* Consistent image styling */
+  @apply w-full h-auto rounded;
 }
 
 figure.kg-card.kg-image-card figcaption {
@@ -139,6 +142,19 @@ figure.kg-card.kg-image-card figcaption {
 .tag-description {
   color: var(--tag-desc-text);
   transition: color 0.2s ease-in-out;
+}
+
+/* Tag Button Styling */
+.tag-button {
+  background-color: var(--tag-card-bg);
+  color: var(--text);
+  border: 1px solid var(--tag-border-initial);
+  transition: color 0.2s ease, border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.tag-button:hover {
+  border-color: var(--link);
 }
 
 /* Scrollbars */

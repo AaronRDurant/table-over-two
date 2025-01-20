@@ -34,7 +34,7 @@ const connectLinks = [
     href: "mailto:moto@aarondurant.com",
     label: "Email",
     icon: faEnvelope,
-    defaultColor: "#D44638",
+    defaultColor: "#1E90FF",
   },
   {
     href: "https://www.youtube.com/@aarondurant80",
@@ -51,8 +51,11 @@ const connectLinks = [
 ];
 
 export default function Sidebar() {
-  const { theme, toggleTheme, setTeam, team } = useTheme();
+  const { theme, toggleTheme, setTeam, team, systemTheme } = useTheme(); // Include systemTheme
   const [isOpen, setIsOpen] = useState(false);
+
+  // Determine the effective theme (system or user-selected)
+  const effectiveTheme = theme === "system" ? systemTheme : theme;
 
   const memoizedConnectLinks = useMemo(
     () =>
@@ -61,10 +64,12 @@ export default function Sidebar() {
           href,
           label,
           icon,
-          color: defaultColor || (theme === "light" ? lightColor : darkColor),
+          color:
+            defaultColor ||
+            (effectiveTheme === "light" ? lightColor : darkColor),
         })
       ),
-    [theme]
+    [effectiveTheme]
   );
 
   const themeKeys = Object.keys(teamThemes) as Array<keyof typeof teamThemes>;
@@ -188,17 +193,64 @@ export default function Sidebar() {
             className="mt-4 text-sm text-foreground"
             style={{ minHeight: "1.5rem" }}
           >
-            {team !== "default" && teamThemes[team].teamName}
+            {team !== "default" &&
+              (team === "husqvarna" && window.innerWidth <= 640 // Check for mobile screen size
+                ? "Rockstar Energy Husky"
+                : teamThemes[team].teamName)}
           </div>
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center space-x-1 hover:underline mt-2"
             aria-label={`Switch to ${
-              theme === "light" ? "dark" : "light"
+              theme === "system"
+                ? systemTheme === "light"
+                  ? "dark"
+                  : "light"
+                : theme === "light"
+                ? "dark"
+                : "light"
             } mode`}
           >
-            {theme === "light" ? (
+            {theme === "system" ? (
+              systemTheme === "light" ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-blue-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+                    />
+                  </svg>
+                  <span>Dark</span>
+                </>
+              ) : (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-yellow-400"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                    />
+                  </svg>
+                  <span>Light</span>
+                </>
+              )
+            ) : theme === "light" ? (
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +289,15 @@ export default function Sidebar() {
             )}
           </button>
 
-          {/* Connect links */}
+          {/* About Section */}
+          <div className="mt-8">
+            <h2 className="text-lg font-bold mb-1">By Aaron Durant</h2>
+            <p className="text-sm text-foreground leading-snug">
+              On the mindset and strategy behind motocross success.
+            </p>
+          </div>
+
+          {/* Connect Section */}
           <div className="mt-8">
             <h2 className="text-lg font-bold mb-3">Connect</h2>
             <ul className="space-y-2">
@@ -263,12 +323,12 @@ export default function Sidebar() {
         </div>
 
         {/* Footer note */}
-        <div className="mt-8 text-xs text-foreground">
+        {/* <div className="mt-8 text-xs text-foreground">
           <p>
             <strong>Table Over Two</strong>: Exploring motocross success since
             2025.
           </p>
-        </div>
+        </div>*/}
       </aside>
 
       {/* Content Padding for Mobile */}

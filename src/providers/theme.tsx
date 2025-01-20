@@ -16,34 +16,31 @@ type TeamTheme = {
 
 // Define the shape of the ThemeContext
 type ThemeContextType = {
-  theme: "light" | "dark";
+  theme: "light" | "dark" | "system";
   toggleTheme: () => void;
   team: keyof typeof teamThemes;
   setTeam: (team: keyof typeof teamThemes) => void;
+  systemTheme: "light" | "dark";
 };
 
 // Create the ThemeContext
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Define team themes with type annotation
+// Team themes configuration
 export const teamThemes: Record<string, TeamTheme> = {
   default: {
     accent: "#cccccc",
     link: "#1e73e8",
     bubble: "#cccccc",
     teamName: "",
-    dark: {
-      link: "#3a8dff",
-    },
+    dark: { link: "#3a8dff" },
   },
   yamaha: {
     accent: "#95D600",
     link: "#0D47F7",
     bubble: "#0b39a0",
     teamName: "Star Racing Yamaha",
-    dark: {
-      link: "#4185F4",
-    },
+    dark: { link: "#4185F4" },
   },
   honda: {
     accent: "#0033A0",
@@ -56,9 +53,7 @@ export const teamThemes: Record<string, TeamTheme> = {
     link: "#6B9900",
     bubble: "#95D600",
     teamName: "Monster Energy Kawasaki",
-    dark: {
-      link: "#95D600",
-    },
+    dark: { link: "#95D600" },
   },
   ktm: {
     accent: "#FF6600",
@@ -71,92 +66,115 @@ export const teamThemes: Record<string, TeamTheme> = {
     link: "#CB0D25",
     bubble: "#CB0D25",
     teamName: "Rockstar Energy GasGas",
-    dark: {
-      link: "#CB0D25",
-      accent: "#CF9C43",
-    },
+    dark: { link: "#CB0D25", accent: "#CF9C43" },
   },
   husqvarna: {
     accent: "#FFED00",
     link: "#273A60",
     bubble: "#273A60",
     teamName: "Rockstar Energy Husqvarna",
-    dark: {
-      accent: "#273A60",
-      link: "#FFED00",
-    },
+    dark: { link: "#FFED00", accent: "#273A60" },
   },
   triumph: {
     accent: "#D4D700",
     link: "#000000",
     bubble: "#F0FF00",
     teamName: "Triumph Factory Racing",
-    dark: {
-      link: "#F0FF00",
-    },
+    dark: { link: "#F0FF00" },
   },
 };
 
 // ThemeProvider component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
   const [team, setTeam] = useState<keyof typeof teamThemes>("default");
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("light");
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // Detect system theme
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme") as
-        | "light"
-        | "dark"
-        | null;
-      const savedTeam = localStorage.getItem("team") as
-        | keyof typeof teamThemes
-        | null;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const updateSystemTheme = () =>
+      setSystemTheme(mediaQuery.matches ? "dark" : "light");
 
-      setTheme(savedTheme || "light");
-      setTeam(savedTeam || "default");
-      setIsHydrated(true);
-    }
+    updateSystemTheme();
+    mediaQuery.addEventListener("change", updateSystemTheme);
+
+    return () => mediaQuery.removeEventListener("change", updateSystemTheme);
   }, []);
 
+  // Load saved preferences from localStorage
   useEffect(() => {
-    if (isHydrated) {
-      const root = document.documentElement;
-      const teamColors = teamThemes[team];
+    const savedTheme = localStorage.getItem("theme") as
+      | "light"
+      | "dark"
+      | "system"
+      | null;
+    const savedTeam = localStorage.getItem("team") as keyof typeof teamThemes;
 
-      root.setAttribute("data-theme", theme);
+    setTheme(savedTheme || "system");
+    setTeam(savedTeam || "default");
+    setIsHydrated(true);
+  }, []);
 
-      const linkColor =
-        theme === "dark" && teamColors.dark?.link
-          ? teamColors.dark.link
-          : teamColors.link || "#3a8dff";
+  // Apply theme and update root CSS variables
+  useEffect(() => {
+    if (!isHydrated) return;
 
-      const accentColor =
-        theme === "dark" && teamColors.dark?.accent
-          ? teamColors.dark.accent
-          : teamColors.accent;
+    const appliedTheme = theme === "system" ? systemTheme : theme;
+    const root = document.documentElement;
+    const teamColors = teamThemes[team];
 
-      root.style.setProperty("--accent", accentColor);
-      root.style.setProperty("--link", linkColor);
+    root.setAttribute("data-theme", appliedTheme);
 
-      localStorage.setItem("theme", theme);
-      localStorage.setItem("team", team);
-    }
-  }, [theme, team, isHydrated]);
+    const linkColor =
+      appliedTheme === "dark" && teamColors.dark?.link
+        ? teamColors.dark.link
+        : teamColors.link;
 
+    const accentColor =
+      appliedTheme === "dark" && teamColors.dark?.accent
+        ? teamColors.dark.accent
+        : teamColors.accent;
+
+    const backgroundColor = appliedTheme === "dark" ? "#1f1f1f" : "#ffffff";
+
+    root.style.setProperty("--link", linkColor);
+    root.style.setProperty("--accent", accentColor);
+    root.style.setProperty("--background", backgroundColor);
+
+    const metaThemeColor = document.querySelector("meta[name='theme-color']");
+    if (metaThemeColor) metaThemeColor.setAttribute("content", backgroundColor);
+
+    localStorage.setItem("theme", theme);
+    localStorage.setItem("team", team);
+  }, [theme, systemTheme, team, isHydrated]);
+
+  // Toggle theme mode
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme((prev) =>
+      prev === "system"
+        ? systemTheme === "light"
+          ? "dark"
+          : "light"
+        : prev === "light"
+        ? "dark"
+        : "light"
+    );
   };
 
   if (!isHydrated) return null;
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, team, setTeam }}>
+    <ThemeContext.Provider
+      value={{ theme, toggleTheme, team, setTeam, systemTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );
 };
 
+// Custom hook to use the ThemeContext
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
