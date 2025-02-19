@@ -10,14 +10,14 @@ import { Post } from "@/types";
  * @returns An object where the keys are years and the values are arrays of posts from that year.
  */
 function groupPostsByYear(posts: Post[]): Record<string, Post[]> {
-  return posts.reduce((acc: Record<string, Post[]>, post: Post) => {
+  return posts.reduce((acc, post) => {
     const year = new Date(post.published_at).getFullYear().toString();
     if (!acc[year]) {
       acc[year] = [];
     }
     acc[year].push(post);
     return acc;
-  }, {});
+  }, {} as Record<string, Post[]>);
 }
 
 /**
@@ -31,7 +31,7 @@ export const generateMetadata = () => ({
 
 /**
  * Archive Page
- * Displays all posts grouped by year.
+ * Displays all posts grouped by year, with larger images (golden ratio) on desktop and no images on mobile.
  */
 export default async function ArchivePage() {
   let posts: Post[] = [];
@@ -73,23 +73,23 @@ export default async function ArchivePage() {
                 {year}
               </h2>
               <ul className="space-y-6">
-                {groupedPosts[year].map((post: Post) => (
+                {groupedPosts[year].map((post) => (
                   <li
                     key={post.id}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
                   >
-                    {/* Post Thumbnail (Desktop Only) */}
+                    {/* Post Thumbnail (Hidden on Mobile, Shown on Desktop) */}
                     {post.feature_image && (
-                      <div className="hidden sm:block">
+                      <div className="hidden sm:block w-48 flex-shrink-0">
                         <Image
                           src={post.feature_image}
                           alt={
                             post.feature_image_alt ||
                             `Thumbnail for ${post.title}`
                           }
-                          width={120}
-                          height={74}
-                          className="rounded object-cover"
+                          width={240}
+                          height={150}
+                          className="rounded object-cover w-full h-auto"
                         />
                       </div>
                     )}

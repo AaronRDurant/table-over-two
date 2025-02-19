@@ -4,9 +4,27 @@ import { getGhostTags, getGhostPosts } from "@/api/ghost";
 import { Tag, Post } from "@/types";
 
 /**
- * Dynamically generate metadata for the Topics page.
+ * Groups posts by tag.
  *
- * @returns Metadata object for the Topics page.
+ * @param tags - Array of tags.
+ * @param posts - Array of posts.
+ * @returns An object where keys are tag slugs and values contain tag data and associated posts.
+ */
+function groupPostsByTag(
+  tags: Tag[],
+  posts: Post[]
+): Record<string, { tag: Tag; posts: Post[] }> {
+  return tags.reduce((acc, tag) => {
+    const relatedPosts = posts.filter((post) =>
+      post.tags?.some((postTag) => postTag.slug === tag.slug)
+    );
+    acc[tag.slug] = { tag, posts: relatedPosts };
+    return acc;
+  }, {} as Record<string, { tag: Tag; posts: Post[] }>);
+}
+
+/**
+ * Dynamically generate metadata for the Topics page.
  */
 export const generateMetadata = () => ({
   title: "Topics • Table Over Two",
@@ -15,22 +33,21 @@ export const generateMetadata = () => ({
 
 /**
  * Topics Page
- * Displays all tags with their description, featured image, and associated articles.
+ * Displays all tags with their article count, hiding images on mobile.
  */
 export default async function TopicsPage() {
-  const tags: Tag[] = await getGhostTags();
-  const posts: Post[] = await getGhostPosts();
+  let tags: Tag[] = [];
+  let posts: Post[] = [];
+
+  try {
+    tags = await getGhostTags();
+    posts = await getGhostPosts();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 
   // Group posts by tags
-  const postsByTag: Record<string, Post[]> = {};
-  posts.forEach((post) => {
-    post.tags?.forEach((tag) => {
-      if (!postsByTag[tag.slug]) {
-        postsByTag[tag.slug] = [];
-      }
-      postsByTag[tag.slug].push(post);
-    });
-  });
+  const groupedTags = groupPostsByTag(tags, posts);
 
   return (
     <div className="flex justify-center bg-background text-foreground min-h-screen">
@@ -42,67 +59,44 @@ export default async function TopicsPage() {
           </h1>
         </header>
 
-        {/* Topics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {tags.map((tag) => (
-            <div
+        {/* Topics List */}
+        <ul className="space-y-6">
+          {Object.values(groupedTags).map(({ tag, posts }) => (
+            <li
               key={tag.id}
-              className="tag-card p-4 rounded-lg shadow-md flex flex-col"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
             >
-              {/* Tag Image */}
+              {/* Tag Image (Hidden on Mobile, Shown on Desktop) */}
               {tag.feature_image && (
-                <Image
-                  src={tag.feature_image}
-                  alt={`Table Over Two photo for ${tag.name}`}
-                  width={600}
-                  height={371}
-                  className="w-full object-cover rounded mb-4"
-                  priority
-                />
+                <div className="hidden sm:block w-48 flex-shrink-0">
+                  <Image
+                    src={tag.feature_image}
+                    alt={`Table Over Two photo for ${tag.name}`}
+                    width={240} // Larger golden ratio image
+                    height={150} // Golden ratio height
+                    className="rounded object-cover w-full h-auto"
+                  />
+                </div>
               )}
-
-              {/* Tag Name */}
-              <h2 className="text-lg sm:text-xl font-semibold mb-2">
-                {tag.name}
-              </h2>
-
-              {/* Tag Description */}
-              {tag.description && (
-                <p className="tag-description text-base text-secondary mb-4">
-                  {tag.description}
+              <div>
+                {/* Article Count */}
+                <p className="text-sm text-secondary">
+                  {posts.length} {posts.length === 1 ? "article" : "articles"}
                 </p>
-              )}
-
-              {/* List of Articles */}
-              {postsByTag[tag.slug] && postsByTag[tag.slug].length > 0 ? (
-                <ul className="list-disc ml-5 space-y-2">
-                  {postsByTag[tag.slug].slice(0, 3).map((post) => (
-                    <li key={post.id}>
-                      <Link
-                        href={`/${post.slug}`}
-                        className="text-link hover:underline text-base"
-                      >
-                        {post.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-gray-500">
-                  No articles available for this topic yet.
-                </p>
-              )}
-
-              {/* View All Link */}
-              <Link
-                href={`/topics/${tag.slug}`}
-                className="mt-4 text-link font-medium hover:underline self-start"
-              >
-                View all →
-              </Link>
-            </div>
+                {/* Tag Name */}
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  <Link
+                    href={`/topics/${tag.slug}`}
+                    className="hover:underline"
+                    aria-label={`View all articles in ${tag.name}`}
+                  >
+                    {tag.name}
+                  </Link>
+                </h2>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </main>
     </div>
   );
