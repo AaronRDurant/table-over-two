@@ -8,23 +8,25 @@ import { Post } from "@/types";
  * Map of tag slugs to photo credits.
  */
 const photoCredits: Record<string, string> = {
-  "2025-supercross": "Honda",
+  "2025-supercross": "Hayden Durant/Table Over Two",
+  "250sx-east": "Hayden Durant/Table Over Two",
   "anaheim-1": "Align Media/KTM",
-  "austin-forkner": "Feld Entertainment, Inc.",
-  "chase-sexton": "Simon Cudby/KTM",
-  "cooper-webb": "Feld Entertainment, Inc.",
-  "eli-tomac": "Star Racing Yamaha",
-  "jason-anderson": "Feld Entertainment, Inc.",
+  "austin-forkner": "Hayden Durant/Table Over Two",
+  "chance-hymas": "Hayden Durant/Table Over Two",
+  "chase-sexton": "Hayden Durant/Table Over Two",
+  "cooper-webb": "Hayden Durant/Table Over Two",
+  "eli-tomac": "Feld Entertainment, Inc.",
+  "jason-anderson": "Hayden Durant/Table Over Two",
   "jett-lawrence": "Honda",
   "jo-shimoda": "Honda",
   "julien-beaumer": "Simon Cudby/KTM",
-  "justin-barcia": "Align Media/GasGas",
-  media: "Align Media/KTM",
-  "monster-energy-pro-circuit-kawasaki": "Feld Entertainment, Inc.",
+  "justin-barcia": "Hayden Durant/Table Over Two",
+  media: "Hayden Durant/Table Over Two",
+  "monster-energy-pro-circuit-kawasaki": "Hayden Durant/Table Over Two",
   "san-diego": "Align Media/KTM",
-  supercross: "Honda",
-  "table-over-two": "Honda",
-  "triumph-factory-racing": "Feld Entertainment, Inc.",
+  supercross: "Hayden Durant/Table Over Two",
+  "table-over-two": "Hayden Durant/Table Over Two",
+  "triumph-factory-racing": "Hayden Durant/Table Over Two",
 };
 
 /**

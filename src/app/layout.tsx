@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     url: "https://www.tableovertwo.com",
     images: [
       {
-        url: "https://www.tableovertwo.com/Jett-Lawrence-2024-Supercross-Honda-CRF450R-race-bike.jpg",
+        url: "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
         width: 1200,
         height: 630,
         alt: "Jett Lawrence's 2024 Supercross Honda CRF450R race bike",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       "Insights and analysis on Supercross and Pro Motocross for dedicated fans.",
     images: [
       {
-        url: "https://www.tableovertwo.com/Jett-Lawrence-2024-Supercross-Honda-CRF450R-race-bike.jpg",
+        url: "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
         alt: "Jett Lawrence's 2024 Supercross Honda CRF450R race bike",
       },
     ],
