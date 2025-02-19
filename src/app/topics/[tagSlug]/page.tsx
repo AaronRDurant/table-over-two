@@ -131,25 +131,23 @@ export default async function TagPage({
               {filteredPosts.map((post: Post) => (
                 <li
                   key={post.id}
-                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
                 >
-                  {/* Post Thumbnail */}
+                  {/* Post Thumbnail (Hidden on Mobile, Shown on Desktop) */}
                   {post.feature_image && (
-                    <div className="hidden sm:block">
+                    <div className="hidden sm:block w-48 flex-shrink-0">
                       <Image
                         src={post.feature_image}
                         alt={
                           post.feature_image_alt ||
                           `Thumbnail for ${post.title}`
                         }
-                        width={120}
-                        height={72}
-                        className="rounded object-cover"
+                        width={240}
+                        height={150}
+                        className="rounded object-cover w-full h-auto"
                       />
                     </div>
                   )}
-
-                  {/* Post Details */}
                   <div>
                     {/* Post Published Date */}
                     <p className="text-sm text-secondary">
