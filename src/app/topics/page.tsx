@@ -27,7 +27,7 @@ function groupPostsByTag(
  * Dynamically generate metadata for the Topics page.
  */
 export const generateMetadata = () => ({
-  title: "Topics • Table Over Two",
+  title: "Topics",
   description: "Discover topics and explore articles on Table Over Two.",
 });
 

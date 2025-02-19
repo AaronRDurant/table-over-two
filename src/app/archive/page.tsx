@@ -24,7 +24,7 @@ function groupPostsByYear(posts: Post[]): Record<string, Post[]> {
  * Dynamically generate metadata for the Archive page.
  */
 export const generateMetadata = () => ({
-  title: "Archive • Table Over Two",
+  title: "Archive",
   description:
     "Explore the archive of Table Over Two's posts, grouped by year.",
 });

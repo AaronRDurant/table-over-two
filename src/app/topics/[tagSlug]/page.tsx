@@ -46,13 +46,13 @@ export async function generateMetadata({
 
   if (!tag) {
     return {
-      title: "Tag Not Found • Table Over Two",
+      title: "Tag Not Found",
       description: "The tag you're looking for does not exist.",
     };
   }
 
   return {
-    title: `${tag.name} • Table Over Two`,
+    title: `${tag.name}`,
     description: tag.description || `Explore posts tagged with ${tag.name}.`,
   };
 }

@@ -25,7 +25,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.title} • Table Over Two`,
+    title: `${post.title}`,
     description:
       post.excerpt ||
       "Read the latest insights on Supercross and Pro Motocross.",

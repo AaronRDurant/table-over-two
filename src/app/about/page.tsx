@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (!aboutPage) {
     return {
-      title: "About Table Over Two",
+      title: "About",
       description: fallbackDescription,
     };
   }
