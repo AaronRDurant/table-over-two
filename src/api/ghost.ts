@@ -53,7 +53,14 @@ export async function getGhostPosts(limit = 5): Promise<Post[]> {
       throw new Error(`Failed to fetch posts: ${response.statusText}`);
 
     const data = await response.json();
-    return Array.isArray(data.posts) ? data.posts : [];
+
+    // Filter out posts that contain an internal tag (visibility: "internal")
+    const filteredPosts = data.posts.filter(
+      (post: Post) =>
+        !post.tags?.some((tag: Tag) => tag.visibility === "internal")
+    );
+
+    return filteredPosts;
   } catch (error) {
     console.error("Error fetching posts:", error);
     return [];
@@ -154,7 +161,13 @@ export async function getGhostTags(): Promise<Tag[]> {
       throw new Error(`Failed to fetch tags: ${response.statusText}`);
 
     const data = await response.json();
-    return Array.isArray(data.tags) ? data.tags : [];
+
+    // Filter out internal tags
+    const filteredTags = data.tags.filter(
+      (tag: Tag) => tag?.visibility !== "internal"
+    );
+
+    return filteredTags;
   } catch (error) {
     console.error("Error fetching tags:", error);
     return [];

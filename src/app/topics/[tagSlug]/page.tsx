@@ -1,33 +1,43 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { getGhostPosts, getGhostTags } from "@/api/ghost";
+import { getGhostPostBySlug, getGhostPosts, getGhostTags } from "@/api/ghost";
 import { Post } from "@/types";
 
 /**
- * Map of tag slugs to photo credits.
+ * Fetches tag photo credits from the "Tag Photo Credits" post in Ghost.
+ * The JSON data is embedded inside the post's HTML, so we:
+ * - Strip HTML tags safely.
+ * - Replace any non-breaking spaces.
+ * - Ensure the extracted text is valid JSON before parsing.
+ *
+ * @returns A record of tag slugs mapped to their photo credits.
  */
-const photoCredits: Record<string, string> = {
-  "2025-supercross": "Hayden Durant/Table Over Two",
-  "250sx-east": "Hayden Durant/Table Over Two",
-  "anaheim-1": "Align Media/KTM",
-  "austin-forkner": "Hayden Durant/Table Over Two",
-  "chance-hymas": "Hayden Durant/Table Over Two",
-  "chase-sexton": "Hayden Durant/Table Over Two",
-  "cooper-webb": "Hayden Durant/Table Over Two",
-  "eli-tomac": "Feld Entertainment, Inc.",
-  "jason-anderson": "Hayden Durant/Table Over Two",
-  "jett-lawrence": "Honda",
-  "jo-shimoda": "Honda",
-  "julien-beaumer": "Simon Cudby/KTM",
-  "justin-barcia": "Hayden Durant/Table Over Two",
-  media: "Hayden Durant/Table Over Two",
-  "monster-energy-pro-circuit-kawasaki": "Hayden Durant/Table Over Two",
-  "san-diego": "Align Media/KTM",
-  supercross: "Hayden Durant/Table Over Two",
-  "table-over-two": "Hayden Durant/Table Over Two",
-  "triumph-factory-racing": "Hayden Durant/Table Over Two",
-};
+async function getPhotoCredits(): Promise<Record<string, string>> {
+  try {
+    const creditPost = await getGhostPostBySlug("tag-photo-credits");
+
+    if (!creditPost || !creditPost.html) return {}; // Ensure post exists
+
+    // Extract JSON content safely
+    const jsonText = creditPost.html
+      .replace(/^<p>/, "") // Remove opening <p>
+      .replace(/<\/p>$/, "") // Remove closing </p>
+      .replace(/<\/?[^>]+(>|$)/g, "") // Remove all HTML tags
+      .replace(/&nbsp;/g, " ") // Replace non-breaking spaces
+      .trim(); // Trim whitespace
+
+    // Ensure it's valid JSON before parsing
+    if (!jsonText.startsWith("{") || !jsonText.endsWith("}")) {
+      throw new Error("Invalid JSON structure in Tag Photo Credits post.");
+    }
+
+    return JSON.parse(jsonText);
+  } catch (error) {
+    console.error("Error fetching or parsing photo credits JSON:", error);
+    return {};
+  }
+}
 
 /**
  * Dynamically generate metadata for tag pages.
@@ -71,6 +81,7 @@ export default async function TagPage({
   const { tagSlug } = await params;
   const tags = await getGhostTags();
   const tag = tags.find((t) => t.slug === tagSlug);
+  const photoCredits = await getPhotoCredits(); // Fetch the photo credits from Ghost
 
   if (!tag) {
     return (
@@ -108,7 +119,7 @@ export default async function TagPage({
                 />
               </div>
               <p className="feature-image-caption text-sm text-secondary">
-                {photoCredits[tagSlug] || "Unknown"}
+                {photoCredits?.[tagSlug] ?? "Unknown"}
               </p>
             </div>
           )}

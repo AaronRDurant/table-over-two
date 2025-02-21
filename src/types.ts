@@ -21,6 +21,7 @@ export type Tag = {
   slug: string;
   description?: string;
   feature_image?: string;
+  visibility: "public" | "internal";
 };
 
 export type OGImageDescriptor = {
