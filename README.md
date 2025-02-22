@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏁 Table Over Two
 
-## Getting Started
+A sleek Next.js website, built to showcase motocross insights with Ghost CMS integration.
 
-First, run the development server:
+## 🚀 Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Table Over Two is a Supercross and motocross analysis platform that goes beyond race results. It dives into pivotal moments, strategic decisions, and rider psychology — offering high-level insights for dedicated fans who want to understand what separates the best from the rest.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This front-end repo powers the site, built with **Next.js**, styled with **Tailwind CSS**, and seamlessly integrated with **Ghost CMS**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚡ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **[Next.js](https://nextjs.org/)** — React framework for fast, SSR/SSG-rendered pages
+- **[Tailwind CSS](https://tailwindcss.com/)** — Utility-first styling for a sleek, responsive UI
+- **[Ghost](https://ghost.org/)** — Headless CMS for seamless content management
+- **[Vercel](https://vercel.com/)** — Front-end hosting with CI/CD integration
+- **[DigitalOcean](https://www.digitalocean.com/)** — Scalable hosting for Ghost CMS
 
-## Learn More
+## 📖 Features
 
-To learn more about Next.js, take a look at the following resources:
+- ⚡ **Blazing-fast performance** with Next.js & Vercel
+- 📱 **Fully responsive** and optimized for mobile & desktop
+- 📰 **Dynamic content** — fetches articles from Ghost CMS in real time
+- 🔍 **SEO-optimized metadata** for superior search visibility & social sharing
+- 🌗 **Dark mode support** for a seamless browsing experience
+- 🎨 **Custom factory team-inspired themes** — choose from eight color schemes, each with light & dark modes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📌 Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 📱 **Mobile Menu Redesign** — Improve mobile navigation, potentially moving links to the bottom-right for better one-handed usability.
+- 📡 **RSS Feed Support** — Add an RSS feed so readers can follow new articles in their favorite feed readers.
+- 🔎 **Search & Related Articles** — Implement search functionality and add a related articles section at the end of each post.
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is open-source under the [MIT License](LICENSE), but **Table Over Two's branding, design, and content are not covered under this license**. The code is freely available, but please do not directly copy the name, logo, or article content.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📬 Connect
+
+- **Website:** [aarondurant.com](https://aarondurant.com/)
+- **Email:** [aaron@aarondurant.com](mailto:aaron@aarondurant.com)
+- **X:** [@aarondurant80](https://x.com/aarondurant80)
