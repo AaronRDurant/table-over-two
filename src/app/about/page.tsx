@@ -5,19 +5,38 @@ import { getGhostPageBySlug } from "@/api/ghost";
  * Dynamically generate metadata for the About page from Ghost.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const fallbackDescription = "Learn more about Table Over Two."; // Unified fallback
+  const title = "About • Table Over Two";
+  const description = "On the mindset and strategy behind motocross success.";
+  const defaultImage =
+    "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg";
+
   const aboutPage = await getGhostPageBySlug("about");
 
-  if (!aboutPage) {
-    return {
-      title: "About",
-      description: fallbackDescription,
-    };
-  }
+  const pageDescription = aboutPage?.excerpt?.trim() || description;
+  const pageImage = aboutPage?.feature_image || defaultImage;
 
   return {
-    title: aboutPage.title, // Exact title from Ghost
-    description: aboutPage.excerpt || fallbackDescription, // Unified fallback
+    title,
+    description: pageDescription,
+    openGraph: {
+      title,
+      description: pageDescription,
+      url: "https://www.tableovertwo.com/about",
+      images: [
+        {
+          url: pageImage,
+          width: 1200,
+          height: 630,
+          alt: "About Table Over Two",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: pageDescription,
+      images: [pageImage],
+    },
   };
 }
 

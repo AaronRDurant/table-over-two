@@ -6,28 +6,20 @@ import { Post } from "@/types";
 
 /**
  * Fetches tag photo credits from the "Tag Photo Credits" post in Ghost.
- * The JSON data is embedded inside the post's HTML, so we:
- * - Strip HTML tags safely.
- * - Replace any non-breaking spaces.
- * - Ensure the extracted text is valid JSON before parsing.
- *
- * @returns A record of tag slugs mapped to their photo credits.
  */
 async function getPhotoCredits(): Promise<Record<string, string>> {
   try {
     const creditPost = await getGhostPostBySlug("tag-photo-credits");
 
-    if (!creditPost || !creditPost.html) return {}; // Ensure post exists
+    if (!creditPost || !creditPost.html) return {};
 
-    // Extract JSON content safely
     const jsonText = creditPost.html
-      .replace(/^<p>/, "") // Remove opening <p>
-      .replace(/<\/p>$/, "") // Remove closing </p>
-      .replace(/<\/?[^>]+(>|$)/g, "") // Remove all HTML tags
-      .replace(/&nbsp;/g, " ") // Replace non-breaking spaces
-      .trim(); // Trim whitespace
+      .replace(/^<p>/, "")
+      .replace(/<\/p>$/, "")
+      .replace(/<\/?[^>]+(>|$)/g, "")
+      .replace(/&nbsp;/g, " ")
+      .trim();
 
-    // Ensure it's valid JSON before parsing
     if (!jsonText.startsWith("{") || !jsonText.endsWith("}")) {
       throw new Error("Invalid JSON structure in Tag Photo Credits post.");
     }
@@ -41,9 +33,6 @@ async function getPhotoCredits(): Promise<Record<string, string>> {
 
 /**
  * Dynamically generate metadata for tag pages.
- *
- * @param params - Contains the dynamic tag slug.
- * @returns Metadata object for the page.
  */
 export async function generateMetadata({
   params,
@@ -61,17 +50,34 @@ export async function generateMetadata({
     };
   }
 
+  const title = `${tag.name} • Table Over Two`;
+  const description =
+    tag.description?.trim() || `Explore posts tagged with ${tag.name}.`;
+  const defaultFeatureImage =
+    "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg";
+  const featureImage = tag.feature_image || defaultFeatureImage;
+
   return {
-    title: `${tag.name}`,
-    description: tag.description || `Explore posts tagged with ${tag.name}.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://www.tableovertwo.com/topics/${tagSlug}`,
+      images: [{ url: featureImage, width: 1200, height: 630, alt: tag.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [featureImage],
+    },
   };
 }
 
 /**
  * Tag Page
  * Displays posts associated with a specific tag.
- *
- * @param params - Contains the dynamic tag slug.
  */
 export default async function TagPage({
   params,
@@ -81,7 +87,7 @@ export default async function TagPage({
   const { tagSlug } = await params;
   const tags = await getGhostTags();
   const tag = tags.find((t) => t.slug === tagSlug);
-  const photoCredits = await getPhotoCredits(); // Fetch the photo credits from Ghost
+  const photoCredits = await getPhotoCredits();
 
   if (!tag) {
     return (
@@ -104,7 +110,7 @@ export default async function TagPage({
   return (
     <div className="flex justify-center bg-background text-foreground min-h-screen">
       <main className="max-w-3xl w-full px-4 sm:px-6 md:px-8 py-6 sm:py-10 md:py-12">
-        {/* Page Title */}
+        {/* Page Header */}
         <header className="mb-6 sm:mb-8 md:mb-10">
           {tag.feature_image && (
             <div>

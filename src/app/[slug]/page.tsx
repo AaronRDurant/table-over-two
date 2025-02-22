@@ -19,34 +19,44 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "404: Article Not Found",
+      title: "404: Article Not Found • Table Over Two",
       description: "The article you're looking for doesn't exist.",
     };
   }
 
+  const ghostBaseUrl = "https://www.tableovertwo.com/";
+  const featureImage = post.feature_image
+    ? post.feature_image.startsWith("http")
+      ? post.feature_image
+      : `${ghostBaseUrl}${post.feature_image}`
+    : "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg";
+
+  // Use post excerpt for meta description, or a fallback
+  const metaDescription =
+    post.excerpt?.trim() ||
+    "On the mindset and strategy behind motocross success.";
+
   return {
-    title: `${post.title}`,
-    description:
-      post.excerpt ||
-      "Read the latest insights on Supercross and Pro Motocross.",
+    title: `${post.title} • Table Over Two`,
+    description: metaDescription,
     openGraph: {
-      title: post.title,
-      description: post.excerpt || "",
+      title: `${post.title} • Table Over Two`,
+      description: metaDescription,
+      url: `https://www.tableovertwo.com/${slug}`,
       images: [
         {
-          url: post.feature_image || "/default-og-image.jpg",
+          url: featureImage,
           width: 1200,
           height: 630,
-          alt:
-            post.feature_image_alt || "Table Over Two motocross article photo",
+          alt: post.feature_image_alt || "Table Over Two motocross article",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt || "",
-      images: [post.feature_image || "/default-og-image.jpg"],
+      title: `${post.title} • Table Over Two`,
+      description: metaDescription,
+      images: [featureImage],
     },
   };
 }

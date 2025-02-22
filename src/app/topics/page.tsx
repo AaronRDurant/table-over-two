@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getGhostTags, getGhostPosts } from "@/api/ghost";
@@ -26,10 +27,36 @@ function groupPostsByTag(
 /**
  * Dynamically generate metadata for the Topics page.
  */
-export const generateMetadata = () => ({
-  title: "Topics",
-  description: "Discover topics and explore articles on Table Over Two.",
-});
+export const generateMetadata = (): Metadata => {
+  const title = "Topics • Table Over Two";
+  const description = "Browse topics covered on Table Over Two.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: "https://www.tableovertwo.com/topics",
+      images: [
+        {
+          url: "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Table Over Two topics page",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
+      ],
+    },
+  };
+};
 
 /**
  * Topics Page

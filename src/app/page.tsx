@@ -1,7 +1,46 @@
+import { Metadata } from "next";
 import { getGhostPosts } from "@/api/ghost";
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "@/types";
+
+/**
+ * Dynamically generate metadata for the Home page.
+ */
+export const generateMetadata = (): Metadata => {
+  const title = "Table Over Two — On motocross mindset and strategy";
+  const description = "On the mindset and strategy behind motocross success.";
+  const defaultImage =
+    "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      siteName: "Table Over Two",
+      description,
+      url: "https://www.tableovertwo.com",
+      images: [
+        {
+          url: defaultImage,
+          width: 1200,
+          height: 630,
+          alt: "Table Over Two — Supercross & motocross analysis",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [defaultImage],
+    },
+    other: {
+      "og:title": title,
+    },
+  };
+};
 
 /**
  * Homepage

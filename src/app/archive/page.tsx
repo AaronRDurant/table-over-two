@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getGhostPosts } from "@/api/ghost";
 import Link from "next/link";
 import Image from "next/image";
@@ -23,11 +24,37 @@ function groupPostsByYear(posts: Post[]): Record<string, Post[]> {
 /**
  * Dynamically generate metadata for the Archive page.
  */
-export const generateMetadata = () => ({
-  title: "Archive",
-  description:
-    "Explore the archive of Table Over Two's posts, grouped by year.",
-});
+export const generateMetadata = (): Metadata => {
+  const title = "Archive • Table Over Two";
+  const description =
+    "Browse Table Over Two's complete archive of articles, grouped by year.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: "https://www.tableovertwo.com/archive",
+      images: [
+        {
+          url: "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Table Over Two Archive Page",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg",
+      ],
+    },
+  };
+};
 
 /**
  * Archive Page
