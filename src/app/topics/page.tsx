@@ -1,8 +1,8 @@
+import { getGhostPosts, getGhostTags } from "@/api/ghost";
+import { Post, Tag } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getGhostTags, getGhostPosts } from "@/api/ghost";
-import { Tag, Post } from "@/types";
 
 /**
  * Groups posts by tag.
@@ -68,7 +68,7 @@ export default async function TopicsPage() {
 
   try {
     tags = await getGhostTags();
-    posts = await getGhostPosts();
+    posts = await getGhostPosts(100);
   } catch (error) {
     console.error("Error fetching data:", error);
   }
