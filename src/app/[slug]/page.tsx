@@ -1,7 +1,7 @@
+import { getGhostPostBySlug, getGhostPosts } from "@/api/ghost";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getGhostPosts, getGhostPostBySlug } from "@/api/ghost";
 
 /**
  * Generate metadata dynamically for the article page.
@@ -24,12 +24,21 @@ export async function generateMetadata({
     };
   }
 
-  const ghostBaseUrl = "https://www.tableovertwo.com/";
+  const siteOrigin = "https://www.tableovertwo.com";
+  const ghostBaseUrl = `${siteOrigin}/`;
   const featureImage = post.feature_image
     ? post.feature_image.startsWith("http")
       ? post.feature_image
       : `${ghostBaseUrl}${post.feature_image}`
-    : "https://www.tableovertwo.com/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg";
+    : `${siteOrigin}/2025-Detroit-Supercross-Ford-Field-opening-ceremonies.jpg`;
+
+  // Serve card image from same origin so X can fetch it (avoids "Failed to get a proxied URL").
+  const cardImageUrl =
+    new URL(featureImage).hostname === "www.tableovertwo.com"
+      ? featureImage
+      : `${siteOrigin}/api/card-image?url=${encodeURIComponent(featureImage)}`;
+
+  const imageAlt = post.feature_image_alt || "Table Over Two motocross article";
 
   // Use post excerpt for meta description, or a fallback
   const metaDescription =
@@ -42,13 +51,13 @@ export async function generateMetadata({
     openGraph: {
       title: `${post.title} • Table Over Two`,
       description: metaDescription,
-      url: `https://www.tableovertwo.com/${slug}`,
+      url: `${siteOrigin}/${slug}`,
       images: [
         {
-          url: featureImage,
+          url: cardImageUrl,
           width: 1200,
           height: 630,
-          alt: post.feature_image_alt || "Table Over Two motocross article",
+          alt: imageAlt,
         },
       ],
     },
@@ -56,7 +65,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${post.title} • Table Over Two`,
       description: metaDescription,
-      images: [featureImage],
+      images: [{ url: cardImageUrl, alt: imageAlt }],
     },
   };
 }
