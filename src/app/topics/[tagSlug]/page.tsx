@@ -1,19 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
-import { getGhostPostBySlug, getGhostPosts, getGhostTags } from "@/api/ghost";
+import { getGhostPageBySlug, getGhostPosts, getGhostTags } from "@/api/ghost";
 import { Post } from "@/types";
 
 /**
- * Fetches tag photo credits from the "Tag Photo Credits" post in Ghost.
+ * Fetches tag photo credits from the "Tag Photo Credits" page in Ghost.
  */
 async function getPhotoCredits(): Promise<Record<string, string>> {
   try {
-    const creditPost = await getGhostPostBySlug("tag-photo-credits");
+    const creditPage = await getGhostPageBySlug("tag-photo-credits");
 
-    if (!creditPost || !creditPost.html) return {};
+    if (!creditPage?.html) return {};
 
-    const jsonText = creditPost.html
+    const jsonText = creditPage.html
       .replace(/^<p>/, "")
       .replace(/<\/p>$/, "")
       .replace(/<\/?[^>]+(>|$)/g, "")
@@ -21,7 +21,7 @@ async function getPhotoCredits(): Promise<Record<string, string>> {
       .trim();
 
     if (!jsonText.startsWith("{") || !jsonText.endsWith("}")) {
-      throw new Error("Invalid JSON structure in Tag Photo Credits post.");
+      throw new Error("Invalid JSON structure in Tag Photo Credits page.");
     }
 
     return JSON.parse(jsonText);
