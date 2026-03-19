@@ -1,16 +1,14 @@
-// Ghost API Configuration
+import { Post, Tag } from "@/types";
+
+// Ghost API Configuration (Content API — read-only key, not Admin API)
 const GHOST_API_URL = process.env.GHOST_API_URL || "";
-const GHOST_CONTENT_API_KEY = process.env.GHOST_ADMIN_API_KEY || "";
+const GHOST_CONTENT_API_KEY =
+  process.env.GHOST_CONTENT_API_KEY ?? process.env.GHOST_ADMIN_API_KEY ?? "";
 
 // Validate API configuration and ensure required environment variables are set
 if (!GHOST_API_URL || !GHOST_CONTENT_API_KEY) {
   throw new Error("Missing Ghost API configuration in environment variables.");
 }
-
-// -------------------------
-// Imports
-// -------------------------
-import { Post, Tag } from "@/types";
 
 // -------------------------
 // Helper Functions
@@ -116,35 +114,6 @@ export async function getGhostPageBySlug(slug: string): Promise<Post | null> {
   } catch (error) {
     console.error("Error fetching page by slug:", error);
     return null;
-  }
-}
-
-/**
- * Fetches posts by a specific tag slug from the Ghost API.
- *
- * @param tagSlug - The slug of the tag to filter posts by.
- * @param limit - The maximum number of posts to retrieve (default is 3).
- * @returns A list of posts for the given tag, or an empty array if the fetch fails.
- */
-export async function getPostsByTagSlug(
-  tagSlug: string,
-  limit = 3
-): Promise<Post[]> {
-  try {
-    const url = buildUrl("posts", {
-      filter: `tag:${tagSlug}`,
-      limit,
-      include: "tags,authors",
-    });
-    const response = await fetch(url);
-    if (!response.ok)
-      throw new Error(`Failed to fetch posts for tag: ${response.statusText}`);
-
-    const data = await response.json();
-    return Array.isArray(data.posts) ? data.posts : [];
-  } catch (error) {
-    console.error(`Error fetching posts for tag ${tagSlug}:`, error);
-    return [];
   }
 }
 

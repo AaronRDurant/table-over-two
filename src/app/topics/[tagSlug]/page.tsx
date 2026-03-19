@@ -1,6 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+
 import { getGhostPageBySlug, getGhostPosts, getGhostTags } from "@/api/ghost";
 import { Post } from "@/types";
 
@@ -118,9 +119,9 @@ export default async function TagPage({
                 <Image
                   src={tag.feature_image}
                   alt={tag.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-lg"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  className="rounded-lg object-cover"
                   priority
                 />
               </div>

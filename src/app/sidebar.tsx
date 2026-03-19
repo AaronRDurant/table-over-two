@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { useTheme, teamThemes } from "@/providers/theme";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faInstagram,
   faXTwitter,
   faYoutube,
-  faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
+import { teamThemes, useTheme } from "@/providers/theme";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -51,7 +51,7 @@ const connectLinks = [
 ];
 
 export default function Sidebar() {
-  const { theme, toggleTheme, setTeam, team, systemTheme } = useTheme(); // Include systemTheme
+  const { theme, toggleTheme, setTeam, team, systemTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   // Determine the effective theme (system or user-selected)
@@ -113,7 +113,7 @@ export default function Sidebar() {
       <div className="sm:hidden fixed top-0 left-0 right-0 bg-background/70 backdrop-blur-md shadow-lg px-3 z-50 flex items-center justify-between h-16">
         <Link
           href="/"
-          onClick={() => setIsOpen(false)} // Close sidebar when logo or H2 is clicked
+          onClick={() => setIsOpen(false)}
           className="flex items-center no-underline hover:no-underline"
         >
           <Image
@@ -163,8 +163,8 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              onClick={() => setIsOpen(false)} // Close sidebar when a link is clicked
-              className="block w-fit text-lg font-semibold hover:underline" // Restrict clickable area
+              onClick={() => setIsOpen(false)}
+              className="block w-fit text-lg font-semibold hover:underline"
             >
               {label}
             </Link>
@@ -194,9 +194,16 @@ export default function Sidebar() {
             style={{ minHeight: "1.5rem" }}
           >
             {team !== "default" &&
-              (team === "husqvarna" && window.innerWidth <= 640 // Check for mobile screen size
-                ? "Rockstar Energy Husky"
-                : teamThemes[team].teamName)}
+              (team === "husqvarna" ? (
+                <>
+                  <span className="sm:hidden">Rockstar Energy Husky</span>
+                  <span className="hidden sm:inline">
+                    {teamThemes.husqvarna.teamName}
+                  </span>
+                </>
+              ) : (
+                teamThemes[team].teamName
+              ))}
           </div>
           {/* Theme toggle */}
           <button
@@ -208,8 +215,8 @@ export default function Sidebar() {
                   ? "dark"
                   : "light"
                 : theme === "light"
-                ? "dark"
-                : "light"
+                  ? "dark"
+                  : "light"
             } mode`}
           >
             {theme === "system" ? (
@@ -321,18 +328,7 @@ export default function Sidebar() {
             </ul>
           </div>
         </div>
-
-        {/* Footer note */}
-        {/* <div className="mt-8 text-xs text-foreground">
-          <p>
-            <strong>Table Over Two</strong>: Exploring motocross success since
-            2025.
-          </p>
-        </div>*/}
       </aside>
-
-      {/* Content Padding for Mobile */}
-      <main className="pt-[4.5rem] sm:pt-0">{/* Main content here */}</main>
     </div>
   );
 }

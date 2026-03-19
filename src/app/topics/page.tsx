@@ -1,8 +1,9 @@
-import { getGhostPosts, getGhostTags } from "@/api/ghost";
-import { Post, Tag } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+import { getGhostPosts, getGhostTags } from "@/api/ghost";
+import { Post, Tag } from "@/types";
 
 /**
  * Groups posts by tag.
@@ -15,13 +16,16 @@ function groupPostsByTag(
   tags: Tag[],
   posts: Post[]
 ): Record<string, { tag: Tag; posts: Post[] }> {
-  return tags.reduce((acc, tag) => {
-    const relatedPosts = posts.filter((post) =>
-      post.tags?.some((postTag) => postTag.slug === tag.slug)
-    );
-    acc[tag.slug] = { tag, posts: relatedPosts };
-    return acc;
-  }, {} as Record<string, { tag: Tag; posts: Post[] }>);
+  return tags.reduce(
+    (acc, tag) => {
+      const relatedPosts = posts.filter((post) =>
+        post.tags?.some((postTag) => postTag.slug === tag.slug)
+      );
+      acc[tag.slug] = { tag, posts: relatedPosts };
+      return acc;
+    },
+    {} as Record<string, { tag: Tag; posts: Post[] }>
+  );
 }
 
 /**

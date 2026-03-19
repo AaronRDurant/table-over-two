@@ -158,8 +158,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           ? "dark"
           : "light"
         : prev === "light"
-        ? "dark"
-        : "light"
+          ? "dark"
+          : "light"
     );
   };
 

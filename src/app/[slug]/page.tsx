@@ -1,7 +1,8 @@
-import { getGhostPostBySlug, getGhostPosts } from "@/api/ghost";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+import { getGhostPostBySlug, getGhostPosts } from "@/api/ghost";
 
 /**
  * Generate metadata dynamically for the article page.
@@ -89,9 +90,9 @@ export async function generateStaticParams() {
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>; // Fix: Changed type to Promise
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // Await the promise to get the slug
+  const { slug } = await params;
   const post = await getGhostPostBySlug(slug);
 
   if (!post) {

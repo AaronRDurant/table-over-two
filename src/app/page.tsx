@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import { getGhostPosts } from "@/api/ghost";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { getGhostPosts } from "@/api/ghost";
 import { Post } from "@/types";
 
 /**

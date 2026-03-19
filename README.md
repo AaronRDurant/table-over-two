@@ -20,10 +20,18 @@ This front-end repo powers the site, built with **Next.js**, styled with **Tailw
 
 - ⚡ **Blazing-fast performance** with Next.js & Vercel
 - 📱 **Fully responsive** and optimized for mobile & desktop
-- 📰 **Dynamic content** — fetches articles from Ghost CMS in real time
+- 📰 **Dynamic content** — articles and pages from Ghost CMS (SSG + on-demand where configured)
 - 🔍 **SEO-optimized metadata** for superior search visibility & social sharing
 - 🌗 **Dark mode support** for a seamless browsing experience
-- 🎨 **Custom factory team-inspired themes** — choose from eight color schemes, each with light & dark modes
+- 🎨 **Custom factory team-inspired themes** — seven factory palettes plus a default, each with light & dark modes
+
+## 🔐 Environment
+
+| Variable                | Purpose                                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------------------- |
+| `GHOST_API_URL`         | Ghost site URL (e.g. `https://your-ghost-host.com`)                                           |
+| `GHOST_CONTENT_API_KEY` | Ghost **Content API** key (read-only)                                                         |
+| `GHOST_ADMIN_API_KEY`   | _(Legacy)_ Accepted as a fallback for the Content API key if `GHOST_CONTENT_API_KEY` is unset |
 
 ## 📌 Roadmap
 

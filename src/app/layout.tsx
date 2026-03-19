@@ -1,5 +1,7 @@
 import "./globals.css";
+
 import { ThemeProvider } from "@/providers/theme";
+
 import Sidebar from "./sidebar";
 
 export default function RootLayout({
@@ -13,11 +15,7 @@ export default function RootLayout({
         {/* Favicon and Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
+        <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
         <link
           rel="icon"
           type="image/png"
@@ -49,9 +47,9 @@ export default function RootLayout({
       <body className="antialiased font-sans">
         <ThemeProvider>
           <div className="flex justify-center min-h-screen bg-background text-foreground">
-            <main className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r-0 sm:border-r border-[var(--accent)]">
+            <div className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r-0 sm:border-r border-[var(--accent)]">
               {children}
-            </main>
+            </div>
             <aside className="h-full">
               <Sidebar />
             </aside>

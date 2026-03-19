@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import { getGhostPosts } from "@/api/ghost";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { getGhostPosts } from "@/api/ghost";
 import { Post } from "@/types";
 
 /**
@@ -11,14 +12,17 @@ import { Post } from "@/types";
  * @returns An object where the keys are years and the values are arrays of posts from that year.
  */
 function groupPostsByYear(posts: Post[]): Record<string, Post[]> {
-  return posts.reduce((acc, post) => {
-    const year = new Date(post.published_at).getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {} as Record<string, Post[]>);
+  return posts.reduce(
+    (acc, post) => {
+      const year = new Date(post.published_at).getFullYear().toString();
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push(post);
+      return acc;
+    },
+    {} as Record<string, Post[]>
+  );
 }
 
 /**
