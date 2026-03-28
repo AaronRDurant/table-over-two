@@ -1,5 +1,7 @@
 import "./globals.css";
 
+import { PlausibleScript } from "@/components/PlausibleScript";
+import { getPlausibleInjection } from "@/lib/plausible-analytics";
 import { ThemeProvider } from "@/providers/theme";
 
 import Sidebar from "./sidebar";
@@ -9,6 +11,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const plausible = getPlausibleInjection();
+
   return (
     <html lang="en">
       <head>
@@ -43,8 +47,19 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
+
+        {plausible ? (
+          <>
+            <link rel="preconnect" href={new URL(plausible.scriptSrc).origin} />
+            <script
+              id="plausible-bootstrap"
+              dangerouslySetInnerHTML={{ __html: plausible.inlineInit }}
+            />
+          </>
+        ) : null}
       </head>
       <body className="antialiased font-sans">
+        {plausible ? <PlausibleScript scriptSrc={plausible.scriptSrc} /> : null}
         <ThemeProvider>
           <div className="flex justify-center min-h-screen bg-background text-foreground">
             <div className="max-w-3xl pt-20 sm:pt-8 pb-6 flex-grow border-r-0 sm:border-r border-[var(--accent)]">
