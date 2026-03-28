@@ -1,13 +1,9 @@
 "use client";
 
 import { Command } from "cmdk";
-import {
-  type CSSProperties,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 
+import { parseManufacturerStandingsResponse } from "@/lib/themes/manufacturer-standings-api";
 import {
   BRAND_IDS_ALPHABETICAL,
   commandItemSearchValue,
@@ -46,18 +42,49 @@ const themePickerLabelClass =
 const themePickerSwatchClass =
   "h-9 w-9 shrink-0 rounded-lg shadow-inner ring-1 ring-black/10 dark:ring-white/10";
 
+/** Stable id for `aria-describedby` when the championship-order hint is visible. */
+const OEM_STANDINGS_ORDER_HINT_ID = "oem-theme-standings-order-hint";
+
 /** Mounts only while the modal is open so cmdk highlight initializes from `brand` each time. */
 function ThemeCommandMenuOpen() {
-  const {
-    brand,
-    setBrand,
-    resolvedAppearance,
-    closeThemeSelector,
-  } = useTheme();
+  const { brand, setBrand, resolvedAppearance, closeThemeSelector } =
+    useTheme();
 
   const [cmdkHighlight, setCmdkHighlight] = useState(() =>
     commandItemSearchValue(brand)
   );
+
+  const [oemDisplayOrder, setOemDisplayOrder] = useState<BrandId[]>(
+    BRAND_IDS_ALPHABETICAL
+  );
+  const [showChampionshipOrderHint, setShowChampionshipOrderHint] =
+    useState(false);
+
+  useEffect(() => {
+    // Fetch once per dialog open; cancel on unmount or after 12s.
+    const ac = new AbortController();
+    const t = window.setTimeout(() => ac.abort(), 12_000);
+
+    void (async () => {
+      try {
+        const res = await fetch("/api/manufacturer-standings", {
+          signal: ac.signal,
+        });
+        if (!res.ok) return;
+        const parsed = parseManufacturerStandingsResponse(await res.json());
+        if (!parsed) return;
+        setOemDisplayOrder(parsed.order);
+        setShowChampionshipOrderHint(parsed.source === "supercrosslive");
+      } catch {
+        // Abort, network failure, or invalid JSON — keep alphabetical defaults.
+      }
+    })();
+
+    return () => {
+      window.clearTimeout(t);
+      ac.abort();
+    };
+  }, []);
 
   const select = useCallback(
     (id: BrandId) => {
@@ -112,7 +139,10 @@ function ThemeCommandMenuOpen() {
             >
               <span
                 className={themePickerSwatchClass}
-                style={commandPaletteSwatchStyle(defaultDef, resolvedAppearance)}
+                style={commandPaletteSwatchStyle(
+                  defaultDef,
+                  resolvedAppearance
+                )}
                 aria-hidden
               />
               <span className={themePickerLabelClass}>{defaultDef.label}</span>
@@ -123,11 +153,24 @@ function ThemeCommandMenuOpen() {
               ) : null}
             </Command.Item>
           </Command.Group>
+          {showChampionshipOrderHint ? (
+            <p
+              id={OEM_STANDINGS_ORDER_HINT_ID}
+              className="mb-2 px-2 text-xs leading-snug text-[var(--secondary-text)]"
+            >
+              Manufacturer themes are listed here in current championship order.
+            </p>
+          ) : null}
           <Command.Group
             value="oem-themes"
+            aria-describedby={
+              showChampionshipOrderHint
+                ? OEM_STANDINGS_ORDER_HINT_ID
+                : undefined
+            }
             className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 [&_[cmdk-group-items]]:gap-2"
           >
-            {BRAND_IDS_ALPHABETICAL.map((id) => {
+            {oemDisplayOrder.map((id) => {
               const def = OEM_THEMES[id];
               const itemValue = commandItemSearchValue(id);
               const selected = brand === id;

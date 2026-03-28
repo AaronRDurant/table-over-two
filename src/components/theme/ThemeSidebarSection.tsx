@@ -14,8 +14,7 @@ import { OEM_THEMES } from "@/lib/themes/oem-palettes";
 import { useTheme } from "@/providers/theme";
 
 const glyphEase = "duration-300 ease-[cubic-bezier(0.33,1,0.68,1)]";
-const glyphTransition =
-  `transition-[opacity,transform] ${glyphEase} motion-reduce:transition-opacity motion-reduce:duration-200`;
+const glyphTransition = `transition-[opacity,transform] ${glyphEase} motion-reduce:transition-opacity motion-reduce:duration-200`;
 
 export function ThemeSidebarSection() {
   const {
