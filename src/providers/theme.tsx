@@ -1,184 +1,155 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 
-// Define the shape of each team's theme
-type TeamTheme = {
-  accent: string;
-  link: string;
-  bubble: string;
-  teamName: string;
-  dark?: {
-    link?: string;
-    accent?: string;
-  };
+import { ThemeCommandMenu } from "@/components/theme/ThemeCommandMenu";
+import {
+  applyBrandToRoot,
+  resolveAppearanceMode,
+} from "@/lib/themes/apply-theme";
+import { OEM_THEMES } from "@/lib/themes/oem-palettes";
+import {
+  persistTheme,
+  readStoredAppearance,
+  readStoredBrand,
+} from "@/lib/themes/storage";
+import type { AppearancePreference, BrandId } from "@/lib/themes/types";
+
+type ThemeContextValue = {
+  brand: BrandId;
+  setBrand: (id: BrandId) => void;
+  appearance: AppearancePreference;
+  setAppearance: (a: AppearancePreference) => void;
+  /** Follows prior toggle: flips effective light/dark; collapses `system` into an explicit choice. */
+  toggleAppearance: () => void;
+  systemIsDark: boolean;
+  resolvedAppearance: "light" | "dark";
+  /** Cmd/Ctrl+K palette + sidebar theme control share this surface. */
+  themeSelectorOpen: boolean;
+  openThemeSelector: () => void;
+  closeThemeSelector: () => void;
+  toggleThemeSelector: () => void;
+  /** False until stored brand/appearance + system scheme are read (avoids SSR/flash). */
+  prefsReady: boolean;
 };
 
-// Define the shape of the ThemeContext
-type ThemeContextType = {
-  theme: "light" | "dark" | "system";
-  toggleTheme: () => void;
-  team: keyof typeof teamThemes;
-  setTeam: (team: keyof typeof teamThemes) => void;
-  systemTheme: "light" | "dark";
-};
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-// Create the ThemeContext
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [brand, setBrandState] = useState<BrandId>("default");
+  const [appearance, setAppearanceState] =
+    useState<AppearancePreference>("system");
+  const [prefsReady, setPrefsReady] = useState(false);
+  const [themeSelectorOpen, setThemeSelectorOpen] = useState(false);
+  const [systemIsDark, setSystemIsDark] = useState(false);
 
-// Team themes configuration
-export const teamThemes: Record<string, TeamTheme> = {
-  default: {
-    accent: "#cccccc",
-    link: "#1e73e8",
-    bubble: "#cccccc",
-    teamName: "",
-    dark: { link: "#3a8dff" },
-  },
-  yamaha: {
-    accent: "#95D600",
-    link: "#0D47F7",
-    bubble: "#0b39a0",
-    teamName: "Star Racing Yamaha",
-    dark: { link: "#4185F4" },
-  },
-  honda: {
-    accent: "#0033A0",
-    link: "#CC0000",
-    bubble: "#CC0000",
-    teamName: "Honda HRC Progressive",
-  },
-  kawasaki: {
-    accent: "#95D600",
-    link: "#6B9900",
-    bubble: "#95D600",
-    teamName: "Monster Energy Kawasaki",
-    dark: { link: "#95D600" },
-  },
-  ktm: {
-    accent: "#FF6600",
-    link: "#FF6600",
-    bubble: "#FF6600",
-    teamName: "Red Bull KTM",
-  },
-  gasgas: {
-    accent: "#CF9C43",
-    link: "#CB0D25",
-    bubble: "#CB0D25",
-    teamName: "Rockstar Energy GasGas",
-    dark: { link: "#CB0D25", accent: "#CF9C43" },
-  },
-  husqvarna: {
-    accent: "#FFED00",
-    link: "#273A60",
-    bubble: "#273A60",
-    teamName: "Rockstar Energy Husqvarna",
-    dark: { link: "#FFED00", accent: "#273A60" },
-  },
-  triumph: {
-    accent: "#D4D700",
-    link: "#000000",
-    bubble: "#F0FF00",
-    teamName: "Triumph Factory Racing",
-    dark: { link: "#F0FF00" },
-  },
-};
+  const resolvedAppearance = useMemo(
+    () => resolveAppearanceMode(appearance, systemIsDark),
+    [appearance, systemIsDark]
+  );
 
-// ThemeProvider component
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
-  const [team, setTeam] = useState<keyof typeof teamThemes>("default");
-  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("light");
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  // Detect system theme
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const updateSystemTheme = () =>
-      setSystemTheme(mediaQuery.matches ? "dark" : "light");
-
-    updateSystemTheme();
-    mediaQuery.addEventListener("change", updateSystemTheme);
-
-    return () => mediaQuery.removeEventListener("change", updateSystemTheme);
+  useLayoutEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setSystemIsDark(mq.matches);
+    setBrandState(readStoredBrand());
+    setAppearanceState(readStoredAppearance());
+    setPrefsReady(true);
   }, []);
 
-  // Load saved preferences from localStorage
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as
-      | "light"
-      | "dark"
-      | "system"
-      | null;
-    const savedTeam = localStorage.getItem("team") as keyof typeof teamThemes;
-
-    setTheme(savedTheme || "system");
-    setTeam(savedTeam || "default");
-    setIsHydrated(true);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => setSystemIsDark(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Apply theme and update root CSS variables
-  useEffect(() => {
-    if (!isHydrated) return;
-
-    const appliedTheme = theme === "system" ? systemTheme : theme;
+  useLayoutEffect(() => {
+    if (!prefsReady) return;
     const root = document.documentElement;
-    const teamColors = teamThemes[team];
+    applyBrandToRoot(root, brand, resolvedAppearance);
+    persistTheme(brand, appearance);
+    const meta = document.querySelector("meta[name='theme-color']");
+    const bg =
+      OEM_THEMES[brand][resolvedAppearance === "dark" ? "dark" : "light"]
+        .background;
+    if (meta) meta.setAttribute("content", bg);
+  }, [brand, appearance, resolvedAppearance, prefsReady]);
 
-    root.setAttribute("data-theme", appliedTheme);
+  const setBrand = useCallback((id: BrandId) => {
+    setBrandState(id);
+  }, []);
 
-    const linkColor =
-      appliedTheme === "dark" && teamColors.dark?.link
-        ? teamColors.dark.link
-        : teamColors.link;
+  const setAppearance = useCallback((a: AppearancePreference) => {
+    setAppearanceState(a);
+  }, []);
 
-    const accentColor =
-      appliedTheme === "dark" && teamColors.dark?.accent
-        ? teamColors.dark.accent
-        : teamColors.accent;
+  const toggleAppearance = useCallback(() => {
+    setAppearanceState((prev) => {
+      if (prev === "system") {
+        return systemIsDark ? "light" : "dark";
+      }
+      return prev === "light" ? "dark" : "light";
+    });
+  }, [systemIsDark]);
 
-    const backgroundColor = appliedTheme === "dark" ? "#1f1f1f" : "#ffffff";
+  const openThemeSelector = useCallback(() => setThemeSelectorOpen(true), []);
+  const closeThemeSelector = useCallback(() => setThemeSelectorOpen(false), []);
+  const toggleThemeSelector = useCallback(
+    () => setThemeSelectorOpen((o) => !o),
+    []
+  );
 
-    root.style.setProperty("--link", linkColor);
-    root.style.setProperty("--accent", accentColor);
-    root.style.setProperty("--background", backgroundColor);
-
-    const metaThemeColor = document.querySelector("meta[name='theme-color']");
-    if (metaThemeColor) metaThemeColor.setAttribute("content", backgroundColor);
-
-    localStorage.setItem("theme", theme);
-    localStorage.setItem("team", team);
-  }, [theme, systemTheme, team, isHydrated]);
-
-  // Toggle theme mode
-  const toggleTheme = () => {
-    setTheme((prev) =>
-      prev === "system"
-        ? systemTheme === "light"
-          ? "dark"
-          : "light"
-        : prev === "light"
-          ? "dark"
-          : "light"
-    );
-  };
-
-  if (!isHydrated) return null;
+  const value = useMemo(
+    () => ({
+      brand,
+      setBrand,
+      appearance,
+      setAppearance,
+      toggleAppearance,
+      systemIsDark,
+      resolvedAppearance,
+      themeSelectorOpen,
+      openThemeSelector,
+      closeThemeSelector,
+      toggleThemeSelector,
+      prefsReady,
+    }),
+    [
+      brand,
+      setBrand,
+      appearance,
+      setAppearance,
+      toggleAppearance,
+      systemIsDark,
+      resolvedAppearance,
+      themeSelectorOpen,
+      openThemeSelector,
+      closeThemeSelector,
+      toggleThemeSelector,
+      prefsReady,
+    ]
+  );
 
   return (
-    <ThemeContext.Provider
-      value={{ theme, toggleTheme, team, setTeam, systemTheme }}
-    >
+    <ThemeContext.Provider value={value}>
       {children}
+      <ThemeCommandMenu />
     </ThemeContext.Provider>
   );
-};
+}
 
-// Custom hook to use the ThemeContext
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+export function useTheme() {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used within ThemeProvider");
   }
-  return context;
-};
+  return ctx;
+}

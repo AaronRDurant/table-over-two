@@ -15,6 +15,7 @@
   --tag-card-bg: #f6f6f6;
   --tag-desc-text: #2c2c2c;
   --tag-border-initial: #ccc;
+  --ring: #1e73e8;
 }
 
 /* Dark Mode */
@@ -28,6 +29,7 @@
   --tag-card-bg: #181818;
   --tag-desc-text: #cccccc;
   --tag-border-initial: #555;
+  --ring: #3a8dff;
 }
 
 /* ---------- Global Styles ---------- */

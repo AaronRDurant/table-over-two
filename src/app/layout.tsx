@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { PlausibleScript } from "@/components/PlausibleScript";
 import { getPlausibleInjection } from "@/lib/plausible-analytics";
+import { getThemeBootInlineScript } from "@/lib/themes/theme-boot-script";
 import { ThemeProvider } from "@/providers/theme";
 
 import Sidebar from "./sidebar";
@@ -14,8 +15,13 @@ export default function RootLayout({
   const plausible = getPlausibleInjection();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: getThemeBootInlineScript(),
+          }}
+        />
         {/* Favicon and Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

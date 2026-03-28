@@ -11,6 +11,7 @@
 - Ghost (headless CMS, Content API)
 - @tailwindcss/typography (prose for article HTML)
 - Heroicons and Font Awesome (UI icons)
+- cmdk (⌘K / Ctrl+K theme palette)
 - ESLint 9 (flat config) and Prettier 3
 
 ## Getting started
@@ -33,7 +34,9 @@ npm run dev
 - `src/app/about`, `archive`, `topics` — static routes and dynamic `topics/[tagSlug]`
 - `src/app/api/card-image` — same-origin image proxy for social preview images
 - `src/api/ghost.ts` — Ghost Content API helpers (posts, pages, tags)
-- `src/providers/theme.tsx` — light / dark / system theme and factory team accents
+- `src/providers/theme.tsx` — `ThemeProvider`, light / dark / system, OEM reading palettes
+- `src/lib/themes/*` — palette tokens, `localStorage` keys, inline boot script (no flash), cmdk search strings
+- `src/components/theme/*` — sidebar theme card and command palette
 - `src/types.ts` — shared TypeScript types for Ghost payloads
 - `public` — favicons, logo, web app manifest, default social image
 - `eslint.config.mjs` — Next.js + TypeScript + import sort + Prettier compatibility
